@@ -8,9 +8,19 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     version: '0.0.1',
     width: 800,
     height: 800,
-    backgroundColor: '#125555',
+    backgroundColor: '#000000',
     type: Phaser.AUTO,
     scene: MainScene,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: {
+                y: 0,
+            },
+            debug: false,
+        },
+    },
+    input: true,
 };
 
 export default gameConfig;
