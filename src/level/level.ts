@@ -1,11 +1,7 @@
 import 'phaser';
 
-import { EDGES } from '@/constants/edges';
 import { CELL_SIZE } from '@/constants/cells';
-import { Status } from '@/types/status';
-import { LevelConfig } from '@/types/level';
-
-import { randomInteger } from '@/utils/random';
+import { LevelConfig, Point } from '@/types/level';
 
 export class Level extends Phaser.Scene {
     private pathGraphic!: Phaser.GameObjects.Graphics;
@@ -149,4 +145,4 @@ export class Cell {
     }
 }
 
-export { LevelConfig };
+export { LevelConfig, Point };
