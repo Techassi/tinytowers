@@ -1,7 +1,9 @@
 import 'phaser';
 import gameConfig from './config';
 
-import { Level, LevelConfig } from '@/level/level';
+import Level, { LevelConfig } from '@/level/level';
+import HUD from './scenes/hud/hud';
+import Shop from './scenes/shop/shop';
 
 export class TinyTowerGame extends Phaser.Game {
     public constructor(config: Phaser.Types.Core.GameConfig) {
@@ -69,10 +71,17 @@ window.addEventListener('load', () => {
         ],
         waves: [],
         width: gameConfig.width as number,
-        height: gameConfig.height as number,
+        height: 800,
     };
 
     const level = new Level(levelData);
     game.scene.add(level.getLevelConfig().name, level);
+
+    const hud = new HUD();
+    game.scene.add('hud', hud);
+
+    const shop = new Shop();
+    game.scene.add('shop', shop);
+
     game.scene.start(level.getLevelConfig().name);
 });

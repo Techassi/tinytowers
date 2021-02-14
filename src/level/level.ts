@@ -4,7 +4,7 @@ import { CELL_SIZE } from '@/constants/cells';
 import { LevelConfig, Point } from '@/types/level';
 import { GridMap } from '@/gridmap/gridmap';
 
-export class Level extends Phaser.Scene {
+export default class Level extends Phaser.Scene {
     private levelData!: LevelConfig;
 
     private gridmap!: GridMap;

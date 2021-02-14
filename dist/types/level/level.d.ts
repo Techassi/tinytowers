@@ -1,7 +1,7 @@
 /// <reference types="Phaser" />
 import 'phaser';
 import { LevelConfig, Point } from '@/types/level';
-export declare class Level extends Phaser.Scene {
+export default class Level extends Phaser.Scene {
     private levelData;
     private gridmap;
     constructor(levelData: LevelConfig);
