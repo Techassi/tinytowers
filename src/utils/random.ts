@@ -10,3 +10,7 @@ export function randomDirection(): Phaser.Math.Vector2 {
 export function randomInteger(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min) + min);
 }
+
+export function ID(): string {
+    return '_' + Math.random().toString(36).substr(2, 9);
+}

@@ -1,6 +1,8 @@
 import 'phaser';
 
-const gameConfig: Phaser.Types.Core.GameConfig = {
+import { TowerStats } from './tower/tower';
+
+export const gameConfig: Phaser.Types.Core.GameConfig = {
     title: 'TinyTowers',
     version: '0.0.1',
     width: 800,
@@ -19,4 +21,19 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     input: true,
 };
 
-export default gameConfig;
+export const towerConfig: TowerStats[] = new Array<TowerStats>(
+    {
+        name: 'T1',
+        costs: 10,
+        damage: 10,
+        firerate: 1,
+        shotsPerValve: 1,
+    },
+    {
+        name: 'T2',
+        costs: 15,
+        damage: 10,
+        firerate: 2,
+        shotsPerValve: 1,
+    }
+);

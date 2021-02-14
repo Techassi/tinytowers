@@ -1,4 +1,5 @@
 /// <reference types="Phaser" />
 import 'phaser';
-declare const gameConfig: Phaser.Types.Core.GameConfig;
-export default gameConfig;
+import { TowerStats } from './tower/tower';
+export declare const gameConfig: Phaser.Types.Core.GameConfig;
+export declare const towerConfig: TowerStats[];

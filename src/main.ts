@@ -1,9 +1,12 @@
 import 'phaser';
-import gameConfig from './config';
+
+import { gameConfig, towerConfig } from './config';
 
 import Level, { LevelConfig } from '@/level/level';
 import HUD from './scenes/hud/hud';
 import Shop from './scenes/shop/shop';
+
+import Bus from '@/bus/bus';
 
 export class TinyTowerGame extends Phaser.Game {
     public constructor(config: Phaser.Types.Core.GameConfig) {
@@ -80,8 +83,12 @@ window.addEventListener('load', () => {
     const hud = new HUD();
     game.scene.add('hud', hud);
 
-    const shop = new Shop();
+    const shop = new Shop(towerConfig);
     game.scene.add('shop', shop);
+
+    Bus.getInstance().on('ui-subtract-money', (amount: number) => {
+        console.log(amount);
+    });
 
     game.scene.start(level.getLevelConfig().name);
 });

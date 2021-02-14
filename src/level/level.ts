@@ -2,7 +2,10 @@ import 'phaser';
 
 import { CELL_SIZE } from '@/constants/cells';
 import { LevelConfig, Point } from '@/types/level';
+
 import { GridMap } from '@/gridmap/gridmap';
+import store from '@/store';
+import { BuyState } from '@/constants/buy-states';
 
 export default class Level extends Phaser.Scene {
     private levelData!: LevelConfig;
@@ -42,6 +45,10 @@ export default class Level extends Phaser.Scene {
             console.log(
                 this.gridmap.gridToCell(position.x, position.y).getType()
             );
+
+            if (store.get<BuyState>('getBuyState') == BuyState.PRE) {
+                console.log('place turret');
+            }
         });
     }
 
