@@ -1,6 +1,6 @@
 import 'phaser';
 
-import { TowerStats } from '@/objects/tower/tower';
+import { TowerStats } from '@/objects/turret';
 
 import store from '@/store';
 import { BuyState } from '@/constants/buy-states';

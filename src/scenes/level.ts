@@ -6,7 +6,8 @@ import { LevelConfig, Point } from '@/types/level';
 import { GridMap } from '@/gridmap/gridmap';
 import store from '@/store';
 import { BuyState } from '@/constants/buy-states';
-import Enemy from '@/objects/enemy/enemy';
+
+import bus from '@/bus/bus';
 
 export default class Level extends Phaser.Scene {
     private levelConfig!: LevelConfig;
@@ -26,7 +27,8 @@ export default class Level extends Phaser.Scene {
     }
 
     public preload(): void {
-        this.load.image('enemy', 'assets/enemy/enemy.png');
+        this.load.image('enemy1', 'assets/enemy/enemy1.png');
+        this.load.image('enemy2', 'assets/enemy/enemy2.png');
     }
 
     public create(): void {
@@ -43,41 +45,33 @@ export default class Level extends Phaser.Scene {
         this.gridmap.markPathCells();
 
         this.input.on('pointerdown', (event: any) => {
-            const position: Phaser.Math.Vector2 = this.gridmap.worldToGrid(
+            const click: Phaser.Math.Vector2 = this.gridmap.worldToGrid(
                 event.downX,
                 event.downY
             );
-            console.log(
-                this.gridmap.gridToCell(position.x, position.y).getType()
-            );
 
-            if (store.get<BuyState>('getBuyState') == BuyState.PRE) {
-                console.log('place turret');
+            // Placing towers on a path is not possible
+            if (this.gridmap.gridToCell(click.x, click.y).getType() == 'PATH') {
+                return;
             }
+
+            // If we didnt select a tower from the shop we do nothing
+            if (store.get<BuyState>('getBuyState') != BuyState.PRE) {
+                return;
+            }
+
+            bus.emit('level-place-turret');
         });
 
-        const enemies = this.add.group({
-            classType: Enemy,
-            runChildUpdate: true,
-        });
-
-        const enemy = new Enemy(
-            this,
-            'enemy',
-            { health: 10, speed: 1 / 10000 },
-            this.gridmap.getPath()
-        );
-        enemy.setActive(true);
-        enemy.setVisible(true);
-        console.log(enemy);
-
-        this.add.existing(enemy);
-
-        enemies.add(enemy);
+        bus.emit('level-create');
     }
 
     public getLevelConfig(): LevelConfig {
         return this.levelConfig;
+    }
+
+    public getGridmapPath(): Phaser.Curves.Path {
+        return this.gridmap.getPath();
     }
 
     public getName(): string {

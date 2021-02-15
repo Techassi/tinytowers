@@ -36,6 +36,13 @@ export const towerConfig: TowerStats[] = new Array<TowerStats>(
         damage: 10,
         firerate: 2,
         shotsPerValve: 1,
+    },
+    {
+        name: 'T3',
+        costs: 25,
+        damage: 10,
+        firerate: 2,
+        shotsPerValve: 2,
     }
 );
 
@@ -91,7 +98,15 @@ export const levelConfig: LevelConfig = {
             y: 15,
         },
     ],
-    waves: [],
+    waves: [
+        {
+            name: 'TestWave',
+            steps: [
+                { duration: 10, enemyAmount: 10, enemyType: 'enemy1' },
+                { duration: 5, enemyAmount: 5, enemyType: 'enemy2' },
+            ],
+        },
+    ],
     width: gameConfig.width as number,
     height: 800,
 };

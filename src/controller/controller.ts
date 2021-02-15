@@ -1,10 +1,10 @@
 import 'phaser';
 
-import Level, { LevelConfig } from '@/level/level';
+import Level, { LevelConfig } from '@/scenes/level';
 import { TowerStats } from '@/types/tower';
 
-import HUD from '@/scenes/hud/hud';
-import Shop from '@/scenes/shop/shop';
+import HUD from '@/scenes/hud';
+import Shop from '@/scenes/shop';
 
 import WaveController from './wave-controller';
 import TowerController from './tower-controller';
@@ -68,6 +68,15 @@ export default class Controller {
     private startListeners() {
         this.bus.on('shop-tower-selected', (data: any) => {
             console.log(data);
+        });
+
+        this.bus.on('level-place-turret', () => {
+            console.log('level-place-turret');
+        });
+
+        this.bus.on('level-create', () => {
+            this.waveController.loadLevel(this.level);
+            this.waveController.startWave();
         });
     }
 }
