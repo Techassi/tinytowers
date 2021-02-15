@@ -1,14 +1,11 @@
 import 'phaser';
 
-import { TowerStage, TowerStats } from '@/types/tower';
+import { TurretStats } from '@/types/turret';
 
-export default class Tower extends Phaser.GameObjects.Image {
+export default class Turret extends Phaser.GameObjects.Image {
     private imageHead!: Phaser.GameObjects.Image;
 
-    private positionX!: number;
-    private positionY!: number;
-
-    private stats!: TowerStats;
+    private stats!: TurretStats;
 
     private isPlaced = false;
 
@@ -16,11 +13,11 @@ export default class Tower extends Phaser.GameObjects.Image {
         scene: Phaser.Scene,
         imageBase: string,
         imageHead: string,
-        towerStats: TowerStats
+        TurretStats: TurretStats
     ) {
         super(scene, 0, 0, imageBase);
         // this.imageHead = imageHead;
-        this.stats = towerStats;
+        this.stats = TurretStats;
     }
 
     public getName(): string {
@@ -28,8 +25,10 @@ export default class Tower extends Phaser.GameObjects.Image {
     }
 
     public place(x: number, y: number): void {
-        this.positionX = x * 50 + 25;
-        this.positionY = y * 50 + 25;
+        console.log('placed');
+
+        this.x = x * 50 + 25;
+        this.y = y * 50 + 25;
         this.isPlaced = true;
     }
 
@@ -38,8 +37,6 @@ export default class Tower extends Phaser.GameObjects.Image {
     }
 
     public update(time: number, delta: number) {
-        console.log(time, delta);
+        // console.log(time, delta);
     }
 }
-
-export { TowerStage, TowerStats };

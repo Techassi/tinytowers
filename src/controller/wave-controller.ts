@@ -74,7 +74,7 @@ export default class WaveController {
         const enemy = new Enemy(
             this.level,
             this.waves[this.currentWave].steps[this.currentStep].enemyType,
-            { health: 10, speed: 1 / 10000 },
+            { health: 10, speed: 1 / 30000 },
             this.level.getGridmapPath()
         );
 

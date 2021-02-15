@@ -1,13 +1,13 @@
-export interface TowerStats {
+export interface TurretStats {
     name: string;
     costs: number;
     damage: number;
     firerate: number;
     shotsPerValve: number;
-    stages?: TowerStage[];
+    stages?: TurretStage[];
 }
 
-export interface TowerStage {
+export interface TurretStage {
     upgradeCosts: number;
     damageMultiplier: number;
     firerateMultiplier: number;

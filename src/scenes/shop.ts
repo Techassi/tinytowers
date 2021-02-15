@@ -1,15 +1,15 @@
 import 'phaser';
 
-import { TowerStats } from '@/objects/turret';
+import { TurretStats } from '@/types/turret';
 
 import store from '@/store';
 import { BuyState } from '@/constants/buy-states';
-import bus from '@/bus/bus';
+import bus from '@/bus';
 
 export default class Shop extends Phaser.Scene {
-    private availableTowers!: TowerStats[];
+    private availableTowers!: TurretStats[];
 
-    public constructor(towers: TowerStats[]) {
+    public constructor(towers: TurretStats[]) {
         super({
             key: 'shop',
             active: true,
@@ -31,18 +31,20 @@ export default class Shop extends Phaser.Scene {
                 .setInteractive();
 
             button.on('pointerdown', () => {
-                bus.emit('shop-tower-selected', 'hehe');
                 const money = store.get<number>('getMoney');
                 if (money < tower.costs) {
                     return;
                 }
+
                 store.mutate<BuyState>('setBuyState', BuyState.PRE);
+                bus.emit('shop-tower-selected', tower.name);
             });
         }
 
         this.input.keyboard.on('keydown-ESC', () => {
             if (store.get<BuyState>('getBuyState') == BuyState.PRE) {
                 store.mutate<BuyState>('setBuyState', BuyState.DEFAULT);
+                bus.emit('shop-tower-unselected');
             }
         });
     }

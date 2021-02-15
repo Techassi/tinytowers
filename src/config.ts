@@ -1,6 +1,6 @@
 import 'phaser';
 
-import { TowerStats } from '@/types/tower';
+import { TurretStats } from '@/types/turret';
 import { LevelConfig } from '@/types/level';
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
@@ -22,7 +22,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     input: true,
 };
 
-export const towerConfig: TowerStats[] = new Array<TowerStats>(
+export const towerConfig: TurretStats[] = new Array<TurretStats>(
     {
         name: 'T1',
         costs: 10,
@@ -95,7 +95,19 @@ export const levelConfig: LevelConfig = {
         },
         {
             x: 14,
-            y: 15,
+            y: 14,
+        },
+        {
+            x: 12,
+            y: 14,
+        },
+        {
+            x: 12,
+            y: 12,
+        },
+        {
+            x: 0,
+            y: 12,
         },
     ],
     waves: [

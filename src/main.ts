@@ -13,8 +13,7 @@ export class TinyTowerGame extends Phaser.Game {
 window.addEventListener('load', () => {
     const game = new TinyTowerGame(gameConfig);
 
-    console.info('Game started with:');
-    console.info(game.config);
+    console.info('Game started with: ', game.config);
 
     const controller = new Controller(
         game,

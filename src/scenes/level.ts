@@ -1,13 +1,13 @@
 import 'phaser';
 
+import { BuyState } from '@/constants/buy-states';
 import { CELL_SIZE } from '@/constants/cells';
 import { LevelConfig, Point } from '@/types/level';
 
-import { GridMap } from '@/gridmap/gridmap';
+import { GridMap } from '@/gridmap';
 import store from '@/store';
-import { BuyState } from '@/constants/buy-states';
 
-import bus from '@/bus/bus';
+import bus from '@/bus';
 
 export default class Level extends Phaser.Scene {
     private levelConfig!: LevelConfig;
@@ -29,6 +29,7 @@ export default class Level extends Phaser.Scene {
     public preload(): void {
         this.load.image('enemy1', 'assets/enemy/enemy1.png');
         this.load.image('enemy2', 'assets/enemy/enemy2.png');
+        this.load.image('turret1', 'assets/turret/turret1.png');
     }
 
     public create(): void {
@@ -60,7 +61,7 @@ export default class Level extends Phaser.Scene {
                 return;
             }
 
-            bus.emit('level-place-turret');
+            bus.emit('level-place-turret', { x: click.x, y: click.y });
         });
 
         bus.emit('level-create');

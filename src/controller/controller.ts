@@ -1,14 +1,14 @@
 import 'phaser';
 
 import Level, { LevelConfig } from '@/scenes/level';
-import { TowerStats } from '@/types/tower';
+import { TurretStats } from '@/types/turret';
 
 import HUD from '@/scenes/hud';
 import Shop from '@/scenes/shop';
 
 import WaveController from './wave-controller';
-import TowerController from './tower-controller';
-import bus, { Bus } from '@/bus/bus';
+import TurretController from './turret-controller';
+import bus, { Bus } from '@/bus';
 
 export default class Controller {
     // The main game instance
@@ -17,14 +17,14 @@ export default class Controller {
     // Configurations (maybe generate them later)
     private gameConfig!: Phaser.Types.Core.GameConfig;
     private levelConfig!: LevelConfig;
-    private towerConfig!: TowerStats[];
+    private turretStats!: TurretStats[];
 
     // Event bus
     private bus!: Bus;
 
     // Sub controllers
     private waveController!: WaveController;
-    private towerController!: TowerController;
+    private turretController!: TurretController;
 
     // Scenes (HUD and shop)
     private hudScene!: HUD;
@@ -37,18 +37,18 @@ export default class Controller {
         game: Phaser.Game,
         gameConfig: Phaser.Types.Core.GameConfig,
         levelConfig: LevelConfig,
-        towerConfig: TowerStats[]
+        towerConfig: TurretStats[]
     ) {
         this.game = game;
 
         this.gameConfig = gameConfig;
         this.levelConfig = levelConfig;
-        this.towerConfig = towerConfig;
+        this.turretStats = towerConfig;
 
         this.bus = bus;
 
         this.waveController = new WaveController(this.levelConfig.waves);
-        this.towerController = new TowerController();
+        this.turretController = new TurretController(this.turretStats);
     }
 
     public startLevel(): void {
@@ -58,24 +58,30 @@ export default class Controller {
         this.hudScene = new HUD();
         this.game.scene.add('hud', this.hudScene);
 
-        this.shopScene = new Shop(this.towerConfig);
+        this.shopScene = new Shop(this.turretStats);
         this.game.scene.add('shop', this.shopScene);
 
-        this.startListeners();
+        this.addListeners();
         this.game.scene.start(this.level.getName());
     }
 
-    private startListeners() {
-        this.bus.on('shop-tower-selected', (data: any) => {
-            console.log(data);
+    private addListeners() {
+        this.bus.on('shop-tower-selected', (data: string) => {
+            this.turretController.setCurrentPreSelected(data);
         });
 
-        this.bus.on('level-place-turret', () => {
+        this.bus.on('shop-tower-unselected', () => {
+            this.turretController.resetCurrentPreSelected();
+        });
+
+        this.bus.on('level-place-turret', (data: any) => {
+            this.turretController.placeTurret(data.x, data.y);
             console.log('level-place-turret');
         });
 
         this.bus.on('level-create', () => {
             this.waveController.loadLevel(this.level);
+            this.turretController.loadLevel(this.level);
             this.waveController.startWave();
         });
     }
