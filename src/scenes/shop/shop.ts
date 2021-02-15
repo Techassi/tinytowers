@@ -1,9 +1,10 @@
 import 'phaser';
 
-import { TowerStats } from '@/tower/tower';
+import { TowerStats } from '@/objects/tower/tower';
 
 import store from '@/store';
 import { BuyState } from '@/constants/buy-states';
+import bus from '@/bus/bus';
 
 export default class Shop extends Phaser.Scene {
     private availableTowers!: TowerStats[];
@@ -30,6 +31,7 @@ export default class Shop extends Phaser.Scene {
                 .setInteractive();
 
             button.on('pointerdown', () => {
+                bus.emit('shop-tower-selected', 'hehe');
                 const money = store.get<number>('getMoney');
                 if (money < tower.costs) {
                     return;

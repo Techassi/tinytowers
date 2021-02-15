@@ -6,35 +6,40 @@ import { LevelConfig, Point } from '@/types/level';
 import { GridMap } from '@/gridmap/gridmap';
 import store from '@/store';
 import { BuyState } from '@/constants/buy-states';
+import Enemy from '@/objects/enemy/enemy';
 
 export default class Level extends Phaser.Scene {
-    private levelData!: LevelConfig;
+    private levelConfig!: LevelConfig;
 
     private gridmap!: GridMap;
 
-    public constructor(levelData: LevelConfig) {
+    public constructor(levelConfig: LevelConfig) {
         super({
-            key: levelData.name,
+            key: levelConfig.name,
         });
 
-        this.levelData = levelData;
+        this.levelConfig = levelConfig;
     }
 
     public init(): void {
         console.log('init level');
     }
 
+    public preload(): void {
+        this.load.image('enemy', 'assets/enemy/enemy.png');
+    }
+
     public create(): void {
         this.gridmap = this.add.existing(
             new GridMap(
                 this,
-                this.levelData.width,
-                this.levelData.height,
+                this.levelConfig.width,
+                this.levelConfig.height,
                 CELL_SIZE
             )
         );
 
-        this.gridmap.drawPath(this.levelData.path);
+        this.gridmap.drawPath(this.levelConfig.path);
         this.gridmap.markPathCells();
 
         this.input.on('pointerdown', (event: any) => {
@@ -50,10 +55,33 @@ export default class Level extends Phaser.Scene {
                 console.log('place turret');
             }
         });
+
+        const enemies = this.add.group({
+            classType: Enemy,
+            runChildUpdate: true,
+        });
+
+        const enemy = new Enemy(
+            this,
+            'enemy',
+            { health: 10, speed: 1 / 10000 },
+            this.gridmap.getPath()
+        );
+        enemy.setActive(true);
+        enemy.setVisible(true);
+        console.log(enemy);
+
+        this.add.existing(enemy);
+
+        enemies.add(enemy);
     }
 
     public getLevelConfig(): LevelConfig {
-        return this.levelData;
+        return this.levelConfig;
+    }
+
+    public getName(): string {
+        return this.levelConfig.name;
     }
 }
 

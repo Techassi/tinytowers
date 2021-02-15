@@ -8,7 +8,9 @@ export default class Tower extends Phaser.GameObjects.Image {
     private positionX!: number;
     private positionY!: number;
 
-    private towerStats!: TowerStats;
+    private stats!: TowerStats;
+
+    private isPlaced = false;
 
     public constructor(
         scene: Phaser.Scene,
@@ -18,16 +20,17 @@ export default class Tower extends Phaser.GameObjects.Image {
     ) {
         super(scene, 0, 0, imageBase);
         // this.imageHead = imageHead;
-        this.towerStats = towerStats;
+        this.stats = towerStats;
     }
 
     public getName(): string {
-        return this.towerStats.name;
+        return this.stats.name;
     }
 
     public place(x: number, y: number): void {
         this.positionX = x * 50 + 25;
         this.positionY = y * 50 + 25;
+        this.isPlaced = true;
     }
 
     public rotate(deg: number): void {
