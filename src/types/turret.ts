@@ -3,6 +3,7 @@ export interface TurretStats {
     costs: number;
     damage: number;
     firerate: number;
+    firerange: number;
     shotsPerValve: number;
     stages?: TurretStage[];
 }

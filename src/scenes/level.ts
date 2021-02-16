@@ -13,6 +13,7 @@ export default class Level extends Phaser.Scene {
     private levelConfig!: LevelConfig;
 
     private gridmap!: GridMap;
+    private rangeCircle!: Phaser.GameObjects.Graphics;
 
     public constructor(levelConfig: LevelConfig) {
         super({
@@ -30,6 +31,7 @@ export default class Level extends Phaser.Scene {
         this.load.image('enemy1', 'assets/enemy/enemy1.png');
         this.load.image('enemy2', 'assets/enemy/enemy2.png');
         this.load.image('turret1', 'assets/turret/turret1.png');
+        this.load.image('turret-head1', 'assets/turret/turret-head1.png');
     }
 
     public create(): void {
@@ -63,6 +65,11 @@ export default class Level extends Phaser.Scene {
 
             bus.emit('level-place-turret', { x: click.x, y: click.y });
         });
+
+        const circle = new Phaser.Geom.Circle(0, 0, 0);
+        this.rangeCircle = this.add.graphics();
+        this.rangeCircle.lineStyle(2, 0xffffff, 1);
+        this.rangeCircle.strokeCircleShape(circle);
 
         bus.emit('level-create');
     }

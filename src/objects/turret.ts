@@ -16,8 +16,13 @@ export default class Turret extends Phaser.GameObjects.Image {
         TurretStats: TurretStats
     ) {
         super(scene, 0, 0, imageBase);
-        // this.imageHead = imageHead;
+
+        this.imageHead = this.scene.add.image(0, 0, imageHead);
+        this.imageHead.setDepth(1);
         this.stats = TurretStats;
+
+        this.scene.add.existing(this);
+        console.log(this);
     }
 
     public getName(): string {
@@ -25,7 +30,8 @@ export default class Turret extends Phaser.GameObjects.Image {
     }
 
     public place(x: number, y: number): void {
-        console.log('placed');
+        this.imageHead.x = x * 50 + 25;
+        this.imageHead.y = y * 50 + 25;
 
         this.x = x * 50 + 25;
         this.y = y * 50 + 25;
@@ -36,7 +42,11 @@ export default class Turret extends Phaser.GameObjects.Image {
         this.imageHead.angle = deg;
     }
 
+    public rotateAdd(deg: number): void {
+        this.imageHead.angle += deg;
+    }
+
     public update(time: number, delta: number) {
-        // console.log(time, delta);
+        this.rotateAdd(1);
     }
 }

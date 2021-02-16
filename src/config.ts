@@ -28,6 +28,7 @@ export const towerConfig: TurretStats[] = new Array<TurretStats>(
         costs: 10,
         damage: 10,
         firerate: 1,
+        firerange: 100,
         shotsPerValve: 1,
     },
     {
@@ -35,6 +36,7 @@ export const towerConfig: TurretStats[] = new Array<TurretStats>(
         costs: 15,
         damage: 10,
         firerate: 2,
+        firerange: 125,
         shotsPerValve: 1,
     },
     {
@@ -42,6 +44,7 @@ export const towerConfig: TurretStats[] = new Array<TurretStats>(
         costs: 25,
         damage: 10,
         firerate: 2,
+        firerange: 125,
         shotsPerValve: 2,
     }
 );

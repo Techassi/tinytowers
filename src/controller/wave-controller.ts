@@ -79,6 +79,5 @@ export default class WaveController {
         );
 
         this.group.add(enemy);
-        this.level.add.existing(enemy);
     }
 }

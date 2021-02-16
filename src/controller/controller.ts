@@ -76,7 +76,7 @@ export default class Controller {
 
         this.bus.on('level-place-turret', (data: any) => {
             this.turretController.placeTurret(data.x, data.y);
-            console.log('level-place-turret');
+            console.info('level-place-turret');
         });
 
         this.bus.on('level-create', () => {

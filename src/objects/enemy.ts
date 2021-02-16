@@ -16,6 +16,8 @@ export default class Enemy extends Phaser.GameObjects.Image {
 
         this.stats = stats;
         this.follower = new Follower(path);
+
+        this.scene.add.existing(this);
     }
 
     public update(time: number, delta: number): void {

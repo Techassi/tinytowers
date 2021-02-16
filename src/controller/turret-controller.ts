@@ -33,13 +33,14 @@ export default class TurretController {
         const turretStats = this.availableTurrets.get(
             this.currentPreSelected
         ) as TurretStats;
-        const turret = new Turret(this.level, 'turret1', '', turretStats);
 
+        const turret = new Turret(
+            this.level,
+            'turret1',
+            'turret-head1',
+            turretStats
+        );
         this.group.add(turret);
-        this.level.add.existing(turret);
-
-        console.log(turret);
-
         turret.place(x, y);
     }
 
