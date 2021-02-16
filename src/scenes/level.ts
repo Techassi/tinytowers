@@ -81,7 +81,7 @@ export default class Level extends Phaser.Scene {
         bulletGroup: Phaser.Physics.Arcade.Group,
         enemyGroup: Phaser.Physics.Arcade.Group
     ): void {
-        const g = this.physics.add.overlap(
+        this.physics.add.overlap(
             bulletGroup,
             enemyGroup,
             (bullet: any, enemy: any) => {
@@ -96,7 +96,6 @@ export default class Level extends Phaser.Scene {
                 b.remove();
             }
         );
-        console.log(g);
     }
 
     public getLevelConfig(): LevelConfig {

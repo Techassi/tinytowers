@@ -82,8 +82,9 @@ export default class Controller {
             this.turretController.placeTurret(data.x, data.y);
         });
 
-        this.bus.on('level-placed-turret', () => {
+        this.bus.on('level-placed-turret', (costs: number) => {
             store.mutate<BuyState>('setBuyState', BuyState.DEFAULT);
+            store.mutate<number>('updateMoney', -costs);
             this.turretController.resetCurrentPreSelected();
         });
 
@@ -97,8 +98,8 @@ export default class Controller {
             this.waveController.startWave();
         });
 
-        this.bus.on('level-bullet-enemy-collision', (data: any) => {
-            console.log('Hit!', data);
+        this.bus.on('level-enemy-reward', (reward: number) => {
+            store.mutate<number>('updateMoney', reward);
         });
     }
 

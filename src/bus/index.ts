@@ -36,6 +36,7 @@ export interface CallbackMap {
 
 export type Callback = (data?: any) => any;
 
+// Komm Freddy, Bus bauen
 export function createBus(): Bus {
     return new Bus();
 }

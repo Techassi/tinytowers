@@ -41,6 +41,7 @@ export default class Turret extends Phaser.GameObjects.Image {
         this.controller = controller;
 
         // const t = new Phaser.Tweens.Tween()
+        // this.on('pointerdown', () => {});
     }
 
     public parent(): TurretController {
@@ -55,20 +56,23 @@ export default class Turret extends Phaser.GameObjects.Image {
         return this.stats.name;
     }
 
+    public getCosts(): number {
+        return this.stats.costs;
+    }
+
     public place(x: number, y: number): void {
         this.imageHead.setPosition(x * 50 + 25, y * 50 + 25);
         this.setPosition(x * 50 + 25, y * 50 + 25);
 
         this.isPlaced = true;
+        this.setInteractive();
     }
 
     public rotate(deg: number): void {
-        // this.activity = Activity.ACTIVE;
         this.imageHead.angle = deg;
     }
 
     public rotateAdd(deg: number): void {
-        // this.activity = Activity.ACTIVE;
         this.imageHead.angle += deg;
     }
 
@@ -123,7 +127,6 @@ export default class Turret extends Phaser.GameObjects.Image {
 
         this.angleTarget = (angle + Math.PI / 2) * Phaser.Math.RAD_TO_DEG;
         this.addBullet(this.x, this.y, angle);
-        // enemy.takeDamage(this.stats.damage);
     }
 
     private addBullet(x: number, y: number, angle: number): void {

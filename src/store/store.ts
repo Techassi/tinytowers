@@ -3,7 +3,7 @@ export class Store<T> {
     private getters!: GetterMap<T>;
     private mutations!: MutationMap<T>;
 
-    private subscribers!: SubscriberMap;
+    private subscribers!: SubscriberMap<T>;
 
     public constructor(options: StoreOptions<T>) {
         this.state = options.state;
@@ -31,7 +31,7 @@ export class Store<T> {
         return this.getters[key](this.state) as T;
     }
 
-    public subscribe(key: string, subscriber: Subscriber): void {
+    public subscribe(key: string, subscriber: Subscriber<T>): void {
         this.subscribers[key] = this.subscribers[key] || [];
         this.subscribers[key].push(subscriber);
     }
@@ -40,7 +40,7 @@ export class Store<T> {
         const subscribers = this.subscribers[key];
         if (subscribers != undefined && subscribers.length > 0) {
             subscribers.forEach((subscriber) => {
-                subscriber(data);
+                subscriber(this.state, data);
             });
         }
     }
@@ -60,13 +60,13 @@ export interface MutationMap<T> {
     [key: string]: Mutator<T>;
 }
 
-export interface SubscriberMap {
-    [key: string]: Subscriber[];
+export interface SubscriberMap<T> {
+    [key: string]: Subscriber<T>[];
 }
 
 export type Getter<T> = (state: T) => any;
 export type Mutator<T> = (state: T, payload: any) => void;
-export type Subscriber = (data: any) => void;
+export type Subscriber<T> = (state: T, payload: any) => void;
 
 export function createStore<T>(options: StoreOptions<T>): Store<T> {
     return new Store(options);

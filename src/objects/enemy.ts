@@ -2,6 +2,8 @@ import 'phaser';
 
 import { EnemyStats } from '@/types/enemy';
 
+import bus from '@/bus';
+
 export default class Enemy extends Phaser.GameObjects.Image {
     private follower!: Follower;
     private stats!: EnemyStats;
@@ -28,11 +30,17 @@ export default class Enemy extends Phaser.GameObjects.Image {
         if (this.follower.getT() >= 1 || this.stats.health <= 0) {
             this.setActive(false);
             this.setVisible(false);
+
+            bus.emit('level-enemy-reward', this.getReward());
         }
     }
 
     public takeDamage(damage: number): void {
         this.stats.health -= damage;
+    }
+
+    public getReward(): number {
+        return this.stats.reward;
     }
 }
 

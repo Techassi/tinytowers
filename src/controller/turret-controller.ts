@@ -65,7 +65,7 @@ export default class TurretController {
         this.level.setGridmapCell(x, y, 'TURRET');
 
         // this.placedTurrets.push(turret);
-        bus.emit('level-placed-turret');
+        bus.emit('level-placed-turret', turret.getCosts());
     }
 
     public setCurrentPreSelected(key: string): void {

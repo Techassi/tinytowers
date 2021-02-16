@@ -20,6 +20,9 @@ const store = createStore<RootState>({
         setMoney(state: RootState, payload: number): void {
             state.money = payload;
         },
+        updateMoney(state: RootState, payload: number): void {
+            state.money += payload;
+        },
         setBuyState(state: RootState, payload: BuyState): void {
             state.buyState = payload;
         },
