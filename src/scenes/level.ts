@@ -8,6 +8,8 @@ import { GridMap } from '@/gridmap';
 import store from '@/store';
 
 import bus from '@/bus';
+import Bullet from '@/objects/bullet';
+import Enemy from '@/objects/enemy';
 
 export default class Level extends Phaser.Scene {
     private levelConfig!: LevelConfig;
@@ -73,6 +75,28 @@ export default class Level extends Phaser.Scene {
         this.rangeCircle.strokeCircleShape(circle);
 
         bus.emit('level-create');
+    }
+
+    public addPhysics(
+        bulletGroup: Phaser.Physics.Arcade.Group,
+        enemyGroup: Phaser.Physics.Arcade.Group
+    ): void {
+        const g = this.physics.add.overlap(
+            bulletGroup,
+            enemyGroup,
+            (bullet: any, enemy: any) => {
+                const b = bullet as Bullet;
+                const e = enemy as Enemy;
+
+                if (!b.active || !e.active) {
+                    return;
+                }
+
+                e.takeDamage(b.getDamage());
+                b.remove();
+            }
+        );
+        console.log(g);
     }
 
     public getLevelConfig(): LevelConfig {

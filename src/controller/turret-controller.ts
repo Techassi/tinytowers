@@ -5,6 +5,7 @@ import Level from '@/scenes/level';
 
 import bus from '@/bus';
 import Controller from './controller';
+import Bullet from '@/objects/bullet';
 
 export default class TurretController {
     private currentPreSelected!: string;
@@ -12,7 +13,7 @@ export default class TurretController {
 
     private level!: Level;
     private turretGroup!: Phaser.GameObjects.Group;
-    private bulletGroup!: Phaser.GameObjects.Group;
+    private bulletGroup!: Phaser.Physics.Arcade.Group;
 
     private placedTurrets!: Array<Turret>;
 
@@ -45,8 +46,8 @@ export default class TurretController {
             runChildUpdate: true,
         });
 
-        this.bulletGroup = this.level.add.group({
-            classType: Turret,
+        this.bulletGroup = this.level.physics.add.group({
+            classType: Bullet,
             runChildUpdate: true,
         });
     }
@@ -73,5 +74,9 @@ export default class TurretController {
 
     public resetCurrentPreSelected(): void {
         this.currentPreSelected = '';
+    }
+
+    public getBulletGroup(): Phaser.Physics.Arcade.Group {
+        return this.bulletGroup;
     }
 }

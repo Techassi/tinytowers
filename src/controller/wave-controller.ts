@@ -17,7 +17,7 @@ export default class WaveController {
     private currentWave = 0;
     private currentStep = 0;
 
-    private group!: Phaser.GameObjects.Group;
+    private group!: Phaser.Physics.Arcade.Group;
 
     private waveTicker!: Ticker;
     private stepTicker!: Ticker;
@@ -30,7 +30,7 @@ export default class WaveController {
     public loadLevel(level: Level): void {
         this.level = level;
 
-        this.group = this.level.add.group({
+        this.group = this.level.physics.add.group({
             classType: Enemy,
             runChildUpdate: true,
         });
@@ -76,21 +76,34 @@ export default class WaveController {
         range: number
     ): Enemy | undefined {
         const enemies = this.group.getChildren();
+        let minDistance = 100000;
+        let index = -1;
 
         for (let i = 0; i < enemies.length; i++) {
             const enemy = enemies[i] as Enemy;
-            if (
-                enemy.active &&
-                Phaser.Math.Distance.Between(x, y, enemy.x, enemy.y) <= range
-            ) {
-                return enemy;
+            const distance = Phaser.Math.Distance.Between(
+                x,
+                y,
+                enemy.x,
+                enemy.y
+            );
+
+            if (enemy.active && distance <= range) {
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    index = i;
+                }
             }
+        }
+
+        if (index >= 0) {
+            return enemies[index] as Enemy;
         }
 
         return undefined;
     }
 
-    public getEnemyGroup(): Phaser.GameObjects.Group {
+    public getEnemyGroup(): Phaser.Physics.Arcade.Group {
         return this.group;
     }
 
@@ -98,7 +111,7 @@ export default class WaveController {
         const enemy = new Enemy(
             this.level,
             this.waves[this.currentWave].steps[this.currentStep].enemyType,
-            { health: 10, speed: 1 / 30000 },
+            { health: 20, speed: 1 / 30000 },
             this.level.getGridmapPath()
         );
 

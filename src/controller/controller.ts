@@ -90,7 +90,15 @@ export default class Controller {
         this.bus.on('level-create', () => {
             this.waveController.loadLevel(this.level);
             this.turretController.loadLevel(this.level);
+            this.level.addPhysics(
+                this.turretController.getBulletGroup(),
+                this.waveController.getEnemyGroup()
+            );
             this.waveController.startWave();
+        });
+
+        this.bus.on('level-bullet-enemy-collision', (data: any) => {
+            console.log('Hit!', data);
         });
     }
 

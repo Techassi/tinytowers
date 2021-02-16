@@ -24,7 +24,6 @@ export default class Turret extends Phaser.GameObjects.Image {
     private currentCooldown = 0;
     private activity = Activity.IDLE;
 
-    private group!: Phaser.GameObjects.Group;
     private controller!: TurretController;
 
     public constructor(
@@ -39,12 +38,9 @@ export default class Turret extends Phaser.GameObjects.Image {
         this.stats = TurretStats;
 
         this.scene.add.existing(this);
-        this.group = this.scene.add.group({
-            classType: Bullet,
-            runChildUpdate: true,
-        });
-
         this.controller = controller;
+
+        // const t = new Phaser.Tweens.Tween()
     }
 
     public parent(): TurretController {
@@ -67,18 +63,19 @@ export default class Turret extends Phaser.GameObjects.Image {
     }
 
     public rotate(deg: number): void {
+        // this.activity = Activity.ACTIVE;
         this.imageHead.angle = deg;
     }
 
     public rotateAdd(deg: number): void {
+        // this.activity = Activity.ACTIVE;
         this.imageHead.angle += deg;
     }
 
     public update(time: number, delta: number): void {
         if (this.activity == Activity.ACTIVE) {
             if (Math.abs(this.angleTarget - this.imageHead.angle) > 5) {
-                this.rotateAdd((this.angleTarget - this.imageHead.angle) / 10);
-                this.currentCooldown = 0;
+                this.rotateAdd(this.angleTarget - this.imageHead.angle);
             }
 
             if (this.currentCooldown > this.cooldown) {
@@ -100,6 +97,11 @@ export default class Turret extends Phaser.GameObjects.Image {
         }
     }
 
+    private setActivityActive(): void {
+        this.activity = Activity.ACTIVE;
+        this.currentCooldown = 0;
+    }
+
     private getEnemy(x: number, y: number, range: number): Enemy | undefined {
         return this.rootController().getEnemyInRange(x, y, range);
     }
@@ -110,7 +112,8 @@ export default class Turret extends Phaser.GameObjects.Image {
             return;
         }
 
-        this.activity = Activity.ACTIVE;
+        this.setActivityActive();
+
         const angle = Phaser.Math.Angle.Between(
             this.x,
             this.y,
@@ -124,8 +127,9 @@ export default class Turret extends Phaser.GameObjects.Image {
     }
 
     private addBullet(x: number, y: number, angle: number): void {
-        const bullet = this.group.get() as Bullet;
+        const bullet = this.parent().getBulletGroup().get() as Bullet;
         if (bullet) {
+            bullet.setDamage(this.stats.damage);
             bullet.shoot(x, y, angle);
         }
     }
