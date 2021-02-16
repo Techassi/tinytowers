@@ -1,29 +1,51 @@
+import { TurretStats } from '@/types/turret';
+
 import Turret from '@/objects/turret';
 import Level from '@/scenes/level';
-import { TurretStats } from '@/types/turret';
+
+import bus from '@/bus';
+import Controller from './controller';
 
 export default class TurretController {
     private currentPreSelected!: string;
     private availableTurrets!: Map<string, TurretStats>;
 
     private level!: Level;
-    private group!: Phaser.GameObjects.Group;
+    private turretGroup!: Phaser.GameObjects.Group;
+    private bulletGroup!: Phaser.GameObjects.Group;
 
     private placedTurrets!: Array<Turret>;
 
-    public constructor(availableTurrets: TurretStats[]) {
+    private controller!: Controller;
+
+    public constructor(
+        availableTurrets: TurretStats[],
+        controller: Controller
+    ) {
         this.availableTurrets = new Map<string, TurretStats>();
 
         availableTurrets.forEach((turret) => {
             if (this.availableTurrets.has(turret.name)) return;
             this.availableTurrets.set(turret.name, turret);
         });
+
+        this.controller = controller;
+        // this.placedTurrets = new Array<Turret>();
+    }
+
+    public parent(): Controller {
+        return this.controller;
     }
 
     public loadLevel(level: Level): void {
         this.level = level;
 
-        this.group = this.level.add.group({
+        this.turretGroup = this.level.add.group({
+            classType: Turret,
+            runChildUpdate: true,
+        });
+
+        this.bulletGroup = this.level.add.group({
             classType: Turret,
             runChildUpdate: true,
         });
@@ -34,19 +56,18 @@ export default class TurretController {
             this.currentPreSelected
         ) as TurretStats;
 
-        const turret = new Turret(
-            this.level,
-            'turret1',
-            'turret-head1',
-            turretStats
-        );
-        this.group.add(turret);
+        const turret = new Turret(this.level, turretStats, this);
+
+        this.turretGroup.add(turret);
         turret.place(x, y);
+
+        this.level.setGridmapCell(x, y, 'TURRET');
+
+        // this.placedTurrets.push(turret);
+        bus.emit('level-placed-turret');
     }
 
     public setCurrentPreSelected(key: string): void {
-        console.log(key);
-
         this.currentPreSelected = key;
     }
 

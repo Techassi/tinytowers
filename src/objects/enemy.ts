@@ -25,10 +25,14 @@ export default class Enemy extends Phaser.GameObjects.Image {
         const vector: Phaser.Math.Vector2 = this.follower.getVector();
         this.setPosition(vector.x, vector.y);
 
-        if (this.follower.getT() >= 1) {
+        if (this.follower.getT() >= 1 || this.stats.health <= 0) {
             this.setActive(false);
             this.setVisible(false);
         }
+    }
+
+    public takeDamage(damage: number): void {
+        this.stats.health -= damage;
     }
 }
 

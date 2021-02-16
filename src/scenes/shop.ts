@@ -37,14 +37,14 @@ export default class Shop extends Phaser.Scene {
                 }
 
                 store.mutate<BuyState>('setBuyState', BuyState.PRE);
-                bus.emit('shop-tower-selected', tower.name);
+                bus.emit('shop-turret-selected', tower.name);
             });
         }
 
         this.input.keyboard.on('keydown-ESC', () => {
             if (store.get<BuyState>('getBuyState') == BuyState.PRE) {
                 store.mutate<BuyState>('setBuyState', BuyState.DEFAULT);
-                bus.emit('shop-tower-unselected');
+                bus.emit('shop-turret-unselected');
             }
         });
     }

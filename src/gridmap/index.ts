@@ -50,11 +50,18 @@ export class GridMap extends Phaser.GameObjects.Graphics {
         return new Phaser.Math.Vector2(worldX, worldY);
     }
 
-    public gridToCell(x: number, y: number): Cell {
+    public getCell(x: number, y: number): Cell {
         if (x < 0 || y < 0) {
             return GridMap.INAVLID;
         }
         return this.map[x + y * (this.width / this.cellSize)];
+    }
+
+    public setCellType(x: number, y: number, type: string): void {
+        if (x < 0 || y < 0) {
+            return;
+        }
+        this.map[x + y * (this.width / this.cellSize)].setType(type);
     }
 
     public getPath(): Phaser.Curves.Path {
@@ -76,7 +83,7 @@ export class GridMap extends Phaser.GameObjects.Graphics {
                 (point.y + 1) * this.cellSize - this.cellSizeHalf
             );
 
-            this.gridToCell(point.x, point.y).setType('PATH');
+            this.getCell(point.x, point.y).setType('PATH');
         });
 
         this.path.draw(this);
@@ -91,7 +98,7 @@ export class GridMap extends Phaser.GameObjects.Graphics {
 
         points.forEach((point) => {
             const position = this.worldToGrid(point.x, point.y);
-            const cell = this.gridToCell(position.x, position.y);
+            const cell = this.getCell(position.x, position.y);
 
             if (cell.getType() == 'INVALID') {
                 return;

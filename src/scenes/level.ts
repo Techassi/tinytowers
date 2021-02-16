@@ -32,6 +32,7 @@ export default class Level extends Phaser.Scene {
         this.load.image('enemy2', 'assets/enemy/enemy2.png');
         this.load.image('turret1', 'assets/turret/turret1.png');
         this.load.image('turret-head1', 'assets/turret/turret-head1.png');
+        this.load.image('bullet', 'assets/turret/bullet.png');
     }
 
     public create(): void {
@@ -54,7 +55,7 @@ export default class Level extends Phaser.Scene {
             );
 
             // Placing towers on a path is not possible
-            if (this.gridmap.gridToCell(click.x, click.y).getType() == 'PATH') {
+            if (this.gridmap.getCell(click.x, click.y).getType() == 'PATH') {
                 return;
             }
 
@@ -80,6 +81,10 @@ export default class Level extends Phaser.Scene {
 
     public getGridmapPath(): Phaser.Curves.Path {
         return this.gridmap.getPath();
+    }
+
+    public setGridmapCell(x: number, y: number, type: string): void {
+        this.gridmap.setCellType(x, y, type);
     }
 
     public getName(): string {

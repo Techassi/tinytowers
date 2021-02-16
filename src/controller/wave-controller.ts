@@ -70,6 +70,30 @@ export default class WaveController {
         this.enemyTicker.start();
     }
 
+    public getEnemyInRange(
+        x: number,
+        y: number,
+        range: number
+    ): Enemy | undefined {
+        const enemies = this.group.getChildren();
+
+        for (let i = 0; i < enemies.length; i++) {
+            const enemy = enemies[i] as Enemy;
+            if (
+                enemy.active &&
+                Phaser.Math.Distance.Between(x, y, enemy.x, enemy.y) <= range
+            ) {
+                return enemy;
+            }
+        }
+
+        return undefined;
+    }
+
+    public getEnemyGroup(): Phaser.GameObjects.Group {
+        return this.group;
+    }
+
     private spawnEnemy() {
         const enemy = new Enemy(
             this.level,

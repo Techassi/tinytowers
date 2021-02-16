@@ -1,14 +1,18 @@
 import 'phaser';
 
-import Level, { LevelConfig } from '@/scenes/level';
+import { BuyState } from '@/constants/buy-states';
 import { TurretStats } from '@/types/turret';
 
 import HUD from '@/scenes/hud';
 import Shop from '@/scenes/shop';
+import Level, { LevelConfig } from '@/scenes/level';
 
 import WaveController from './wave-controller';
 import TurretController from './turret-controller';
+
 import bus, { Bus } from '@/bus';
+import store from '@/store';
+import Enemy from '@/objects/enemy';
 
 export default class Controller {
     // The main game instance
@@ -48,7 +52,7 @@ export default class Controller {
         this.bus = bus;
 
         this.waveController = new WaveController(this.levelConfig.waves);
-        this.turretController = new TurretController(this.turretStats);
+        this.turretController = new TurretController(this.turretStats, this);
     }
 
     public startLevel(): void {
@@ -66,17 +70,21 @@ export default class Controller {
     }
 
     private addListeners() {
-        this.bus.on('shop-tower-selected', (data: string) => {
+        this.bus.on('shop-turret-selected', (data: string) => {
             this.turretController.setCurrentPreSelected(data);
         });
 
-        this.bus.on('shop-tower-unselected', () => {
+        this.bus.on('shop-turret-unselected', () => {
             this.turretController.resetCurrentPreSelected();
         });
 
         this.bus.on('level-place-turret', (data: any) => {
             this.turretController.placeTurret(data.x, data.y);
-            console.info('level-place-turret');
+        });
+
+        this.bus.on('level-placed-turret', () => {
+            store.mutate<BuyState>('setBuyState', BuyState.DEFAULT);
+            this.turretController.resetCurrentPreSelected();
         });
 
         this.bus.on('level-create', () => {
@@ -84,5 +92,18 @@ export default class Controller {
             this.turretController.loadLevel(this.level);
             this.waveController.startWave();
         });
+    }
+
+    // Wave controller interface
+    public getEnemyInRange(
+        x: number,
+        y: number,
+        range: number
+    ): Enemy | undefined {
+        return this.waveController.getEnemyInRange(x, y, range);
+    }
+
+    public getEnemyGroup(): Phaser.GameObjects.Group {
+        return this.waveController.getEnemyGroup();
     }
 }
