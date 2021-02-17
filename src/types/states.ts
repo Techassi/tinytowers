@@ -1,6 +1,8 @@
 import { BuyState } from '@/constants/buy-states';
 
 export interface RootState {
-    money: number;
     buyState: BuyState;
+    health: number;
+    money: number;
+    score: number;
 }

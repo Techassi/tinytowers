@@ -1,5 +1,7 @@
 export interface EnemyStats {
     health: number;
-    speed: number;
     reward: number;
+    damage: number;
+    speed: number;
+    name: string;
 }

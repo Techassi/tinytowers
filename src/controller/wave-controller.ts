@@ -1,8 +1,11 @@
 import 'phaser';
 
+import { EnemyStats } from '@/types/enemy';
+import { Wave } from '@/types/wave';
+
 import Level from '@/scenes/level';
 import Enemy from '@/objects/enemy';
-import { Wave } from '@/types/wave';
+
 import Ticker from '@/utils/ticker';
 
 export type TickerCallback = (
@@ -23,8 +26,16 @@ export default class WaveController {
     private stepTicker!: Ticker;
     private enemyTicker!: Ticker;
 
-    public constructor(waves: Wave[]) {
+    private availableEnemies!: Map<string, EnemyStats>;
+
+    public constructor(waves: Wave[], availableEnemies: EnemyStats[]) {
         this.waves = waves;
+
+        this.availableEnemies = new Map<string, EnemyStats>();
+        availableEnemies.forEach((enemy) => {
+            if (this.availableEnemies.has(enemy.name)) return;
+            this.availableEnemies.set(enemy.name, enemy);
+        });
     }
 
     public loadLevel(level: Level): void {
@@ -108,10 +119,21 @@ export default class WaveController {
     }
 
     private spawnEnemy() {
+        const name = this.waves[this.currentWave].steps[this.currentStep]
+            .enemyType;
+        const stats = this.availableEnemies.get(name);
+
+        if (stats == undefined) {
+            throw Error('This enemy type is not defined');
+        }
+
+        const statsCopy = {};
+        Object.assign(statsCopy, stats);
+
         const enemy = new Enemy(
             this.level,
-            this.waves[this.currentWave].steps[this.currentStep].enemyType,
-            { health: 20, speed: 1 / 30000, reward: 5 },
+            name,
+            statsCopy as EnemyStats,
             this.level.getGridmapPath()
         );
 

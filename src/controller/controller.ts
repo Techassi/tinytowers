@@ -13,6 +13,7 @@ import TurretController from './turret-controller';
 import bus, { Bus } from '@/bus';
 import store from '@/store';
 import Enemy from '@/objects/enemy';
+import { EnemyStats } from '@/types/enemy';
 
 export default class Controller {
     // The main game instance
@@ -20,6 +21,7 @@ export default class Controller {
 
     // Configurations (maybe generate them later)
     private gameConfig!: Phaser.Types.Core.GameConfig;
+    private enemyConfig!: EnemyStats[];
     private levelConfig!: LevelConfig;
     private turretStats!: TurretStats[];
 
@@ -41,17 +43,22 @@ export default class Controller {
         game: Phaser.Game,
         gameConfig: Phaser.Types.Core.GameConfig,
         levelConfig: LevelConfig,
-        towerConfig: TurretStats[]
+        towerConfig: TurretStats[],
+        enemyConfig: EnemyStats[]
     ) {
         this.game = game;
 
         this.gameConfig = gameConfig;
+        this.enemyConfig = enemyConfig;
         this.levelConfig = levelConfig;
         this.turretStats = towerConfig;
 
         this.bus = bus;
 
-        this.waveController = new WaveController(this.levelConfig.waves);
+        this.waveController = new WaveController(
+            this.levelConfig.waves,
+            this.enemyConfig
+        );
         this.turretController = new TurretController(this.turretStats, this);
     }
 
@@ -100,6 +107,10 @@ export default class Controller {
 
         this.bus.on('level-enemy-reward', (reward: number) => {
             store.mutate<number>('updateMoney', reward);
+        });
+
+        this.bus.on('level-enemy-score', (score: number) => {
+            store.mutate<number>('updateScore', score);
         });
     }
 

@@ -27,11 +27,22 @@ export default class Enemy extends Phaser.GameObjects.Image {
         const vector: Phaser.Math.Vector2 = this.follower.getVector();
         this.setPosition(vector.x, vector.y);
 
-        if (this.follower.getT() >= 1 || this.stats.health <= 0) {
+        // Reached the end
+        if (this.follower.getT() >= 1) {
+            this.setActive(false);
+            this.setVisible(false);
+        }
+
+        // Got killed
+        if (this.stats.health <= 0) {
             this.setActive(false);
             this.setVisible(false);
 
+            const score = Math.round(
+                this.getReward() * (1 - this.follower.getT())
+            );
             bus.emit('level-enemy-reward', this.getReward());
+            bus.emit('level-enemy-score', score);
         }
     }
 
@@ -68,5 +79,3 @@ export class Follower {
         return this.vector;
     }
 }
-
-export { EnemyStats };

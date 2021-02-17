@@ -1,6 +1,6 @@
 import 'phaser';
 
-import { gameConfig, levelConfig, towerConfig } from './config';
+import { enemyConfig, gameConfig, levelConfig, towerConfig } from './config';
 
 import Controller from './controller/controller';
 
@@ -19,7 +19,8 @@ window.addEventListener('load', () => {
         game,
         gameConfig,
         levelConfig,
-        towerConfig
+        towerConfig,
+        enemyConfig
     );
     controller.startLevel();
 });

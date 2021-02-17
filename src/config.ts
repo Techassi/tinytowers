@@ -2,6 +2,7 @@ import 'phaser';
 
 import { TurretStats } from '@/types/turret';
 import { LevelConfig } from '@/types/level';
+import { EnemyStats } from '@/types/enemy';
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
     title: 'TinyTowers',
@@ -117,11 +118,29 @@ export const levelConfig: LevelConfig = {
         {
             name: 'TestWave',
             steps: [
-                { duration: 10, enemyAmount: 10, enemyType: 'enemy1' },
+                { duration: 5, enemyAmount: 10, enemyType: 'enemy1' },
                 { duration: 5, enemyAmount: 5, enemyType: 'enemy2' },
+                { duration: 5, enemyAmount: 15, enemyType: 'enemy1' },
             ],
         },
     ],
     width: gameConfig.width as number,
     height: 800,
 };
+
+export const enemyConfig: EnemyStats[] = new Array<EnemyStats>(
+    {
+        health: 20,
+        reward: 5,
+        damage: 5,
+        speed: 1 / 30000,
+        name: 'enemy1',
+    },
+    {
+        health: 30,
+        reward: 10,
+        damage: 8,
+        speed: 1 / 30000,
+        name: 'enemy2',
+    }
+);
