@@ -25,19 +25,21 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
 
 export const towerConfig: TurretStats[] = new Array<TurretStats>(
     {
-        name: 'T1',
+        name: 'turret1',
         costs: 10,
         damage: 10,
         firerate: 1,
         firerange: 200,
+        shortname: 'T1',
         shotsPerValve: 1,
     },
     {
-        name: 'T2',
+        name: 'turret2',
         costs: 15,
         damage: 10,
         firerate: 2,
         firerange: 300,
+        shortname: 'T2',
         shotsPerValve: 1,
     },
     {
@@ -46,6 +48,7 @@ export const towerConfig: TurretStats[] = new Array<TurretStats>(
         damage: 10,
         firerate: 2,
         firerange: 350,
+        shortname: 'T3',
         shotsPerValve: 2,
     }
 );
@@ -123,6 +126,14 @@ export const levelConfig: LevelConfig = {
                 { duration: 5, enemyAmount: 15, enemyType: 'enemy1' },
             ],
         },
+        {
+            name: 'TestWave2',
+            steps: [
+                { duration: 5, enemyAmount: 10, enemyType: 'enemy2' },
+                { duration: 5, enemyAmount: 5, enemyType: 'enemy1' },
+                { duration: 5, enemyAmount: 15, enemyType: 'enemy2' },
+            ],
+        },
     ],
     width: gameConfig.width as number,
     height: 800,
@@ -131,14 +142,14 @@ export const levelConfig: LevelConfig = {
 export const enemyConfig: EnemyStats[] = new Array<EnemyStats>(
     {
         health: 20,
-        reward: 5,
+        reward: 2,
         damage: 5,
         speed: 1 / 30000,
         name: 'enemy1',
     },
     {
         health: 30,
-        reward: 10,
+        reward: 5,
         damage: 8,
         speed: 1 / 30000,
         name: 'enemy2',

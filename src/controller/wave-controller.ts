@@ -1,12 +1,14 @@
 import 'phaser';
 
 import { EnemyStats } from '@/types/enemy';
-import { Wave } from '@/types/wave';
+import { WaveConfig } from '@/types/wave';
 
 import Level from '@/scenes/level';
 import Enemy from '@/objects/enemy';
+import Wave from '@/objects/wave';
 
 import Ticker from '@/utils/ticker';
+import bus from '@/bus';
 
 export type TickerCallback = (
     ticks: number,
@@ -16,19 +18,18 @@ export type TickerCallback = (
 
 export default class WaveController {
     private level!: Level;
-    private waves!: Wave[];
+    private waves!: WaveConfig[];
     private currentWave = 0;
     private currentStep = 0;
 
     private group!: Phaser.Physics.Arcade.Group;
 
     private waveTicker!: Ticker;
-    private stepTicker!: Ticker;
-    private enemyTicker!: Ticker;
+    private wave!: Wave;
 
     private availableEnemies!: Map<string, EnemyStats>;
 
-    public constructor(waves: Wave[], availableEnemies: EnemyStats[]) {
+    public constructor(waves: WaveConfig[], availableEnemies: EnemyStats[]) {
         this.waves = waves;
 
         this.availableEnemies = new Map<string, EnemyStats>();
@@ -47,38 +48,16 @@ export default class WaveController {
         });
     }
 
-    public startWave(): void {
-        const wave = this.waves[this.currentWave];
+    public start(): void {
+        this.nextWave(false);
 
-        this.stepTicker = new Ticker(wave.steps.length, wave.steps[0].duration);
-        this.enemyTicker = new Ticker(
-            -1,
-            wave.steps[0].duration / wave.steps[0].enemyAmount,
-            true
-        );
-
-        this.stepTicker.on((tick: number) => {
-            if (tick + 1 >= wave.steps.length) {
-                this.enemyTicker.stop();
-                this.currentWave++;
-                return;
+        this.waveTicker = new Ticker(-1, 1 / 4);
+        this.waveTicker.on(() => {
+            if (this.wave.getRemainingEnemies() <= 0) {
+                this.nextWave(true);
             }
-
-            this.currentStep++;
-
-            this.enemyTicker.setInterval(
-                wave.steps[this.currentStep].duration /
-                    wave.steps[this.currentStep].enemyAmount
-            );
-            this.enemyTicker.update();
-
-            this.stepTicker.setInterval(wave.steps[this.currentStep].duration);
         });
-
-        this.enemyTicker.on(this.spawnEnemy.bind(this));
-
-        this.stepTicker.start();
-        this.enemyTicker.start();
+        this.waveTicker.start();
     }
 
     public getEnemyInRange(
@@ -118,25 +97,59 @@ export default class WaveController {
         return this.group;
     }
 
+    public removeEnemyFromWave(): void {
+        this.wave.removeEnemy();
+    }
+
+    private nextWave(add: boolean): void {
+        if (add) this.currentWave++;
+
+        if (this.currentWave >= this.waves.length) {
+            this.waveTicker.stop();
+
+            bus.emit('wave-waves-done');
+            return;
+        }
+
+        const waveConfig = this.waves[this.currentWave];
+        this.wave = new Wave(waveConfig);
+
+        let step = this.wave.curretStep();
+
+        const stepTicker = new Ticker(this.wave.getSteps(), step.getDuration());
+        const enemyTicker = new Ticker(-1, step.getInterval(), true);
+
+        stepTicker.on((tick: number) => {
+            if (tick >= this.wave.getSteps() - 1) {
+                enemyTicker.stop();
+                return;
+            }
+
+            step = this.wave.nextStep();
+            enemyTicker.setInterval(step.getInterval());
+            enemyTicker.restart();
+
+            stepTicker.setInterval(step.getDuration());
+            stepTicker.restartWithInterval();
+        });
+
+        enemyTicker.on(() => {
+            this.spawnEnemy();
+        });
+
+        stepTicker.start();
+        enemyTicker.start();
+    }
+
     private spawnEnemy() {
-        const name = this.waves[this.currentWave].steps[this.currentStep]
-            .enemyType;
+        const name = this.wave.curretStep().getEnemyType();
         const stats = this.availableEnemies.get(name);
 
         if (stats == undefined) {
             throw Error('This enemy type is not defined');
         }
 
-        const statsCopy = {};
-        Object.assign(statsCopy, stats);
-
-        const enemy = new Enemy(
-            this.level,
-            name,
-            statsCopy as EnemyStats,
-            this.level.getGridmapPath()
-        );
-
+        const enemy = new Enemy(this.level, stats, this.level.getGridmapPath());
         this.group.add(enemy);
     }
 }

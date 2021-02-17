@@ -1,10 +1,11 @@
 import 'phaser';
 
+import { BuyState } from '@/constants/buy-states';
 import { TurretStats } from '@/types/turret';
 
 import store from '@/store';
-import { BuyState } from '@/constants/buy-states';
 import bus from '@/bus';
+import Button from './button';
 
 export default class Shop extends Phaser.Scene {
     private availableTowers!: TurretStats[];
@@ -26,9 +27,15 @@ export default class Shop extends Phaser.Scene {
         for (let i = 0; i < this.availableTowers.length; i++) {
             const tower = this.availableTowers[i];
 
-            const button = this.add
-                .text((i + 1) * 50, 900, tower.name, { color: '#ffffff' })
-                .setInteractive();
+            const button = new Button(
+                this,
+                (i + 1) * 100,
+                900,
+                tower.shortname,
+                tower.costs
+            );
+            button.setInteractive();
+            this.add.existing(button);
 
             button.on('pointerdown', () => {
                 const money = store.get<number>('getMoney');

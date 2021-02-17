@@ -1,8 +1,10 @@
 import 'phaser';
 
+import Enemy from './enemy';
+
 export default class Bullet extends Phaser.GameObjects.Image {
+    private readonly speed = 0.3;
     private lifespan = 0;
-    private speed = 0;
     private damage = 0;
 
     private directionX = 0;
@@ -36,14 +38,13 @@ export default class Bullet extends Phaser.GameObjects.Image {
         this.setVisible(true);
 
         this.setPosition(x, y);
-        console.log(this.x, this.y);
     }
 
     public update(time: number, delta: number): void {
         this.lifespan -= delta;
 
-        this.x += this.directionX * (0.3 * delta);
-        this.y += this.directionY * (0.3 * delta);
+        this.x += this.directionX * (this.speed * delta);
+        this.y += this.directionY * (this.speed * delta);
 
         if (this.lifespan < 0) {
             this.setActive(false);
@@ -56,4 +57,21 @@ export default class Bullet extends Phaser.GameObjects.Image {
         this.setVisible(false);
         this.destroy();
     }
+}
+
+export class TargetingBullet extends Bullet {
+    private target!: Enemy;
+
+    public constructor(
+        scene: Phaser.Scene,
+        x: number,
+        y: number,
+        target: Enemy
+    ) {
+        super(scene, x, y);
+
+        this.target = target;
+    }
+
+    // public update(): void {}
 }

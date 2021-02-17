@@ -28,14 +28,16 @@ export default class Turret extends Phaser.GameObjects.Image {
 
     public constructor(
         scene: Phaser.Scene,
-        TurretStats: TurretStats,
+        turretStats: TurretStats,
         controller: TurretController
     ) {
-        super(scene, 0, 0, 'turret1');
+        super(scene, 0, 0, turretStats.name);
 
-        this.imageHead = this.scene.add.image(0, 0, 'turret-head1');
+        console.log(turretStats);
+
+        this.imageHead = this.scene.add.image(0, 0, `${turretStats.name}-head`);
         this.imageHead.setDepth(1);
-        this.stats = TurretStats;
+        this.stats = turretStats;
 
         this.scene.add.existing(this);
         this.controller = controller;
@@ -96,7 +98,7 @@ export default class Turret extends Phaser.GameObjects.Image {
         }
 
         if (time > this.nextTick) {
-            this.nextTick = time + this.stats.firerate * 1000;
+            this.nextTick = time + (1 / this.stats.firerate) * 1000;
             this.shoot();
         }
     }

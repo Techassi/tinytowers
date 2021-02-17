@@ -1,9 +1,9 @@
-import { Wave } from '@/types/wave';
+import { WaveConfig } from '@/types/wave';
 
 export interface LevelConfig {
     name: string;
     path: Point[];
-    waves: Wave[];
+    waves: WaveConfig[];
     width: number;
     height: number;
 }

@@ -33,7 +33,9 @@ export default class Level extends Phaser.Scene {
         this.load.image('enemy1', 'assets/enemy/enemy1.png');
         this.load.image('enemy2', 'assets/enemy/enemy2.png');
         this.load.image('turret1', 'assets/turret/turret1.png');
-        this.load.image('turret-head1', 'assets/turret/turret-head1.png');
+        this.load.image('turret2', 'assets/turret/turret2.png');
+        this.load.image('turret1-head', 'assets/turret/turret1-head.png');
+        this.load.image('turret2-head', 'assets/turret/turret2-head.png');
         this.load.image('bullet', 'assets/turret/bullet.png');
     }
 

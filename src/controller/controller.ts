@@ -2,6 +2,8 @@ import 'phaser';
 
 import { BuyState } from '@/constants/buy-states';
 import { TurretStats } from '@/types/turret';
+import { EnemyStats } from '@/types/enemy';
+import { RootState } from '@/types/states';
 
 import HUD from '@/scenes/hud';
 import Shop from '@/scenes/shop';
@@ -13,7 +15,6 @@ import TurretController from './turret-controller';
 import bus, { Bus } from '@/bus';
 import store from '@/store';
 import Enemy from '@/objects/enemy';
-import { EnemyStats } from '@/types/enemy';
 
 export default class Controller {
     // The main game instance
@@ -77,6 +78,7 @@ export default class Controller {
     }
 
     private addListeners() {
+        // Event bus listeners
         this.bus.on('shop-turret-selected', (data: string) => {
             this.turretController.setCurrentPreSelected(data);
         });
@@ -102,16 +104,40 @@ export default class Controller {
                 this.turretController.getBulletGroup(),
                 this.waveController.getEnemyGroup()
             );
-            this.waveController.startWave();
+            this.waveController.start();
         });
 
-        this.bus.on('level-enemy-reward', (reward: number) => {
+        this.bus.on('enemy-hit-base', (damage: number) => {
+            store.mutate<number>('updateHealth', -damage);
+        });
+
+        this.bus.on('enemy-reward', (reward: number) => {
             store.mutate<number>('updateMoney', reward);
         });
 
-        this.bus.on('level-enemy-score', (score: number) => {
+        this.bus.on('enemy-score', (score: number) => {
             store.mutate<number>('updateScore', score);
         });
+
+        this.bus.on('enemy-removed', () => {
+            this.waveController.removeEnemyFromWave();
+        });
+
+        this.bus.on('wave-waves-done', () => {
+            if (store.get<number>('getHealth') > 0) {
+                console.log('You win!');
+            }
+        });
+
+        // Store subscribers
+        store.subscribe('updateHealth', this.lost.bind(this));
+    }
+
+    private lost(state: RootState): void {
+        if (state.health <= 0) {
+            console.log('You lost!');
+            this.game.destroy(false);
+        }
     }
 
     // Wave controller interface

@@ -22,7 +22,7 @@ export default class Ticker {
     }
 
     public start(): void {
-        this._internalTicker();
+        this.restart();
     }
 
     public stop(): void {
@@ -35,17 +35,22 @@ export default class Ticker {
         }, delay * 1000);
     }
 
+    public restart(): void {
+        this.tick = 0;
+        this.__internalDone();
+        this.__internalTicker();
+    }
+
+    public restartWithInterval(): void {
+        this.__internalDone();
+        this.__internalTicker();
+    }
+
     public reset(): void {
         this.tick = 0;
         this.ticks = 0;
         this.interval = 0;
-        this._internalDone();
-    }
-
-    public update(): void {
-        this.tick = 0;
-        this._internalDone();
-        this._internalTicker();
+        this.__internalDone();
     }
 
     public on(fn: TickerFunc): void {
@@ -60,26 +65,24 @@ export default class Ticker {
         this.ticks = newTicks;
     }
 
-    private _internalTicker() {
+    private __internalTicker() {
         if (this.leading && this.tick == 0) {
-            this._internalCallback();
+            this.__internalCallback();
             this.tick++;
         }
 
-        if (this.tick > this.ticks && this.ticks != -1) {
+        if (this.tick >= this.ticks && this.ticks != -1) {
             return;
         }
 
         this.internalInterval = setTimeout(() => {
-            this._internalCallback();
-            this._internalTicker();
+            this.__internalCallback();
+            this.__internalTicker();
             this.tick++;
         }, this.interval * 1000);
     }
 
-    private _internalCallback(): void {
-        // console.log('cb');
-
+    private __internalCallback(): void {
         if (this.callbacks.length == 0) return;
 
         this.callbacks.forEach((fn) => {
@@ -87,7 +90,7 @@ export default class Ticker {
         });
     }
 
-    private _internalDone(): void {
+    private __internalDone(): void {
         clearTimeout(this.internalInterval);
     }
 }

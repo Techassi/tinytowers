@@ -6,24 +6,33 @@ import bus from '@/bus';
 
 export default class Enemy extends Phaser.GameObjects.Image {
     private follower!: Follower;
-    private stats!: EnemyStats;
+
+    private health!: number;
+    private reward!: number;
+    private damage!: number;
+    private speed!: number;
+    private _name!: string;
 
     public constructor(
         scene: Phaser.Scene,
-        textureKey: string,
         stats: EnemyStats,
         path: Phaser.Curves.Path
     ) {
-        super(scene, 0, 0, textureKey);
+        super(scene, 0, 0, stats.name);
 
-        this.stats = stats;
         this.follower = new Follower(path);
+
+        this.health = stats.health;
+        this.reward = stats.reward;
+        this.damage = stats.damage;
+        this.speed = stats.speed;
+        this._name = stats.name;
 
         this.scene.add.existing(this);
     }
 
     public update(time: number, delta: number): void {
-        this.follower.setT(this.stats.speed * delta);
+        this.follower.setT(this.speed * delta);
         const vector: Phaser.Math.Vector2 = this.follower.getVector();
         this.setPosition(vector.x, vector.y);
 
@@ -31,27 +40,32 @@ export default class Enemy extends Phaser.GameObjects.Image {
         if (this.follower.getT() >= 1) {
             this.setActive(false);
             this.setVisible(false);
+
+            bus.emit('enemy-hit-base', this.damage);
+            bus.emit('enemy-removed');
         }
 
         // Got killed
-        if (this.stats.health <= 0) {
+        if (this.health <= 0) {
             this.setActive(false);
             this.setVisible(false);
 
             const score = Math.round(
                 this.getReward() * (1 - this.follower.getT())
             );
-            bus.emit('level-enemy-reward', this.getReward());
-            bus.emit('level-enemy-score', score);
+
+            bus.emit('enemy-reward', this.getReward());
+            bus.emit('enemy-score', score);
+            bus.emit('enemy-removed');
         }
     }
 
     public takeDamage(damage: number): void {
-        this.stats.health -= damage;
+        this.health -= damage;
     }
 
     public getReward(): number {
-        return this.stats.reward;
+        return this.reward;
     }
 }
 
