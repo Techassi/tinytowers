@@ -3,7 +3,9 @@ import 'phaser';
 import { TurretStats } from '@/types/turret';
 import { LevelConfig } from '@/types/level';
 import { EnemyStats } from '@/types/enemy';
-import { CoreConfig } from './types/core-config';
+import { CoreConfig } from '@/types/core-config';
+
+import Menu from '@/scenes/menu';
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
     title: 'TinyTowers',
@@ -12,6 +14,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     height: 1000,
     backgroundColor: '#000000',
     type: Phaser.AUTO,
+    scene: [Menu],
     physics: {
         default: 'arcade',
         arcade: {

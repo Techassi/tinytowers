@@ -12,8 +12,8 @@ import Bullet from '@/objects/bullet';
 import Enemy from '@/objects/enemy';
 
 export default class Level extends Phaser.Scene {
+    private bgSound!: Phaser.Sound.BaseSound;
     private levelConfig!: LevelConfig;
-
     private gridmap!: GridMap;
 
     public constructor(levelConfig: LevelConfig) {
@@ -48,6 +48,9 @@ export default class Level extends Phaser.Scene {
 
         // Wave
         this.load.audio('next-wave', 'assets/audio/next-wave.wav');
+
+        // Background
+        this.load.audio('bg', 'assets/audio/bg.mp3');
     }
 
     public create(): void {
@@ -86,6 +89,12 @@ export default class Level extends Phaser.Scene {
             bus.emit('level-place-turret', { x: click.x, y: click.y });
         });
 
+        this.bgSound = this.sound.add('bg', {
+            loop: true,
+            volume: 0.2,
+        });
+
+        this.startBackgroundMusic();
         bus.emit('level-create');
     }
 
@@ -124,5 +133,15 @@ export default class Level extends Phaser.Scene {
 
     public getName(): string {
         return this.levelConfig.name;
+    }
+
+    public startBackgroundMusic(): void {
+        this.bgSound.play();
+    }
+
+    public stopBackgroundMusic(): void {
+        if (this.bgSound.isPlaying) {
+            this.bgSound.stop();
+        }
     }
 }

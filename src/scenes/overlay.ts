@@ -27,7 +27,9 @@ export default class Overlay extends Phaser.Scene {
     }
 
     public create(): void {
-        this.damageSound = this.sound.add('damage');
+        this.damageSound = this.sound.add('damage', {
+            volume: 0.3,
+        });
         this.lossSound = this.sound.add('loss');
         this.winSound = this.sound.add('win');
 
