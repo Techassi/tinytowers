@@ -2,7 +2,7 @@ import 'phaser';
 
 import { BuyState } from '@/constants/buy-states';
 import { CELL_SIZE } from '@/constants/cells';
-import { LevelConfig, Point } from '@/types/level';
+import { LevelConfig } from '@/types/level';
 
 import { GridMap } from '@/gridmap';
 import store from '@/store';
@@ -15,7 +15,6 @@ export default class Level extends Phaser.Scene {
     private levelConfig!: LevelConfig;
 
     private gridmap!: GridMap;
-    private rangeCircle!: Phaser.GameObjects.Graphics;
 
     public constructor(levelConfig: LevelConfig) {
         super({
@@ -30,6 +29,7 @@ export default class Level extends Phaser.Scene {
     }
 
     public preload(): void {
+        // Images
         this.load.image('enemy1', 'assets/enemy/enemy1.png');
         this.load.image('enemy2', 'assets/enemy/enemy2.png');
         this.load.image('turret1', 'assets/turret/turret1.png');
@@ -37,6 +37,17 @@ export default class Level extends Phaser.Scene {
         this.load.image('turret1-head', 'assets/turret/turret1-head.png');
         this.load.image('turret2-head', 'assets/turret/turret2-head.png');
         this.load.image('bullet', 'assets/turret/bullet.png');
+
+        // Sounds
+        // UI / Interaction
+        this.load.audio('cancel', 'assets/audio/cancel.mp3');
+
+        // Turrets
+        this.load.audio('turret1-shot', 'assets/audio/turret1-shot.wav');
+        this.load.audio('turret2-shot', 'assets/audio/turret2-shot.mp3');
+
+        // Wave
+        this.load.audio('next-wave', 'assets/audio/next-wave.wav');
     }
 
     public create(): void {
@@ -52,29 +63,28 @@ export default class Level extends Phaser.Scene {
         this.gridmap.drawPath(this.levelConfig.path);
         this.gridmap.markPathCells();
 
+        // Add sounds
+        const cancel = this.sound.add('cancel');
+
         this.input.on('pointerdown', (event: any) => {
             const click: Phaser.Math.Vector2 = this.gridmap.worldToGrid(
                 event.downX,
                 event.downY
             );
 
-            // Placing towers on a path is not possible
-            if (this.gridmap.getCell(click.x, click.y).getType() == 'PATH') {
-                return;
-            }
-
             // If we didnt select a tower from the shop we do nothing
             if (store.get<BuyState>('getBuyState') != BuyState.PRE) {
                 return;
             }
 
+            // Placing towers on a path is not possible
+            if (this.gridmap.getCell(click.x, click.y).getType() != 'DEFAULT') {
+                cancel.play();
+                return;
+            }
+
             bus.emit('level-place-turret', { x: click.x, y: click.y });
         });
-
-        const circle = new Phaser.Geom.Circle(0, 0, 0);
-        this.rangeCircle = this.add.graphics();
-        this.rangeCircle.lineStyle(2, 0xffffff, 1);
-        this.rangeCircle.strokeCircleShape(circle);
 
         bus.emit('level-create');
     }
@@ -116,5 +126,3 @@ export default class Level extends Phaser.Scene {
         return this.levelConfig.name;
     }
 }
-
-export { LevelConfig, Point };

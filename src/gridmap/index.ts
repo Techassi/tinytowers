@@ -34,6 +34,10 @@ export class GridMap extends Phaser.GameObjects.Graphics {
     }
 
     public worldToGrid(x: number, y: number): Phaser.Math.Vector2 {
+        if (x < 0 || x > this.width || y < 0 || y > this.height) {
+            return Phaser.Math.Vector2.ZERO;
+        }
+
         const cellX = Math.floor(x / this.cellSize);
         const cellY = Math.floor(y / this.cellSize);
         return new Phaser.Math.Vector2(cellX, cellY);
@@ -51,7 +55,12 @@ export class GridMap extends Phaser.GameObjects.Graphics {
     }
 
     public getCell(x: number, y: number): Cell {
-        if (x < 0 || y < 0) {
+        if (
+            x < 0 ||
+            x * this.cellSize > this.width ||
+            y < 0 ||
+            y * this.cellSize > this.height
+        ) {
             return GridMap.INAVLID;
         }
         return this.map[x + y * (this.width / this.cellSize)];

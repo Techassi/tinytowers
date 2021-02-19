@@ -4,10 +4,11 @@ import { BuyState } from '@/constants/buy-states';
 import { TurretStats } from '@/types/turret';
 import { EnemyStats } from '@/types/enemy';
 import { RootState } from '@/types/states';
+import { LevelConfig } from '@/types/level';
 
 import HUD from '@/scenes/hud';
 import Shop from '@/scenes/shop';
-import Level, { LevelConfig } from '@/scenes/level';
+import Level from '@/scenes/level';
 
 import WaveController from './wave-controller';
 import TurretController from './turret-controller';
@@ -15,6 +16,8 @@ import TurretController from './turret-controller';
 import bus, { Bus } from '@/bus';
 import store from '@/store';
 import Enemy from '@/objects/enemy';
+import { CoreConfig } from '@/types/core-config';
+import Overlay from '@/scenes/overlay';
 
 export default class Controller {
     // The main game instance
@@ -34,8 +37,9 @@ export default class Controller {
     private turretController!: TurretController;
 
     // Scenes (HUD and shop)
-    private hudScene!: HUD;
+    private overlayScene!: Overlay;
     private shopScene!: Shop;
+    private hudScene!: HUD;
 
     // Current level
     private level!: Level;
@@ -43,16 +47,14 @@ export default class Controller {
     public constructor(
         game: Phaser.Game,
         gameConfig: Phaser.Types.Core.GameConfig,
-        levelConfig: LevelConfig,
-        towerConfig: TurretStats[],
-        enemyConfig: EnemyStats[]
+        coreConfig: CoreConfig
     ) {
         this.game = game;
 
         this.gameConfig = gameConfig;
-        this.enemyConfig = enemyConfig;
-        this.levelConfig = levelConfig;
-        this.turretStats = towerConfig;
+        this.enemyConfig = coreConfig.enemyConfig;
+        this.levelConfig = coreConfig.levelConfig;
+        this.turretStats = coreConfig.towerConfig;
 
         this.bus = bus;
 
@@ -67,11 +69,14 @@ export default class Controller {
         this.level = new Level(this.levelConfig);
         this.game.scene.add(this.level.getName(), this.level);
 
-        this.hudScene = new HUD();
-        this.game.scene.add('hud', this.hudScene);
+        this.overlayScene = new Overlay();
+        this.game.scene.add('overlay', this.overlayScene);
 
         this.shopScene = new Shop(this.turretStats);
         this.game.scene.add('shop', this.shopScene);
+
+        this.hudScene = new HUD();
+        this.game.scene.add('hud', this.hudScene);
 
         this.addListeners();
         this.game.scene.start(this.level.getName());
@@ -109,6 +114,7 @@ export default class Controller {
 
         this.bus.on('enemy-hit-base', (damage: number) => {
             store.mutate<number>('updateHealth', -damage);
+            this.overlayScene.displayDamageIndicator();
         });
 
         this.bus.on('enemy-reward', (reward: number) => {
@@ -125,6 +131,7 @@ export default class Controller {
 
         this.bus.on('wave-waves-done', () => {
             if (store.get<number>('getHealth') > 0) {
+                this.overlayScene.displayWin();
                 console.log('You win!');
             }
         });
@@ -135,8 +142,9 @@ export default class Controller {
 
     private lost(state: RootState): void {
         if (state.health <= 0) {
+            this.overlayScene.displayLoss();
             console.log('You lost!');
-            this.game.destroy(false);
+            this.waveController.stop();
         }
     }
 

@@ -19,10 +19,17 @@ export default class Shop extends Phaser.Scene {
         this.availableTowers = towers;
     }
 
+    public preload(): void {
+        this.load.audio('cancel-esc', 'assets/audio/cancel-esc.wav');
+    }
+
     public create(): void {
         console.log(
             `Creating ${this.availableTowers.length} tower(s) in the shop`
         );
+
+        // Add sounds
+        const cancel = this.sound.add('cancel-esc');
 
         for (let i = 0; i < this.availableTowers.length; i++) {
             const tower = this.availableTowers[i];
@@ -52,6 +59,7 @@ export default class Shop extends Phaser.Scene {
             if (store.get<BuyState>('getBuyState') == BuyState.PRE) {
                 store.mutate<BuyState>('setBuyState', BuyState.DEFAULT);
                 bus.emit('shop-turret-unselected');
+                cancel.play();
             }
         });
     }

@@ -26,6 +26,8 @@ export default class Turret extends Phaser.GameObjects.Image {
 
     private controller!: TurretController;
 
+    private shotSound!: Phaser.Sound.BaseSound;
+
     public constructor(
         scene: Phaser.Scene,
         turretStats: TurretStats,
@@ -41,6 +43,8 @@ export default class Turret extends Phaser.GameObjects.Image {
 
         this.scene.add.existing(this);
         this.controller = controller;
+
+        this.shotSound = this.scene.sound.add(`${turretStats.name}-shot`);
 
         // const t = new Phaser.Tweens.Tween()
         // this.on('pointerdown', () => {});
@@ -129,6 +133,7 @@ export default class Turret extends Phaser.GameObjects.Image {
 
         this.angleTarget = (angle + Math.PI / 2) * Phaser.Math.RAD_TO_DEG;
         this.addBullet(this.x, this.y, angle);
+        this.shotSound.play();
     }
 
     private addBullet(x: number, y: number, angle: number): void {

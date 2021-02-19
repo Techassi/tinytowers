@@ -29,6 +29,8 @@ export default class WaveController {
 
     private availableEnemies!: Map<string, EnemyStats>;
 
+    private nextWaveSound!: Phaser.Sound.BaseSound;
+
     public constructor(waves: WaveConfig[], availableEnemies: EnemyStats[]) {
         this.waves = waves;
 
@@ -46,6 +48,8 @@ export default class WaveController {
             classType: Enemy,
             runChildUpdate: true,
         });
+
+        this.nextWaveSound = this.level.sound.add('next-wave');
     }
 
     public start(): void {
@@ -55,9 +59,15 @@ export default class WaveController {
         this.waveTicker.on(() => {
             if (this.wave.getRemainingEnemies() <= 0) {
                 this.nextWave(true);
+                this.nextWaveSound.play();
             }
         });
         this.waveTicker.start();
+    }
+
+    public stop(): void {
+        this.waveTicker.stop();
+        this.removeAllEnemiesFromGroup();
     }
 
     public getEnemyInRange(
@@ -151,5 +161,9 @@ export default class WaveController {
 
         const enemy = new Enemy(this.level, stats, this.level.getGridmapPath());
         this.group.add(enemy);
+    }
+
+    private removeAllEnemiesFromGroup(): void {
+        this.group.clear();
     }
 }
