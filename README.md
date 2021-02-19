@@ -8,6 +8,8 @@ Name:           Sascha Lautenschläger
 Matrikelnummer: 257287
 ```
 
+Eine spielbare Version befindet sich [hier](https://techassi.github.io/tinytowers/)
+
 Der Quellcode befindet sich [hier](https://github.com/Techassi/tinytowers/tree/master/src)
 
 Informationen zum Game Design befinden sich in der README weiter [unten](https://github.com/Techassi/tinytowers#game-design)
@@ -47,37 +49,107 @@ development build via the above mentioned scripts.
 
 ## Game Design
 
-### Checkliste
+### User interaction (Nutzerinteraktion)
 
--   `Nutzerinteraktion`: Der Nutzer agiert mit dem Spiel mit seiner Maus. Das Auswählen und Platzieren von Türmen erfolgt mit der linken Maustaste.
--   `Objektinteraktion`: Die Bullets und die Gegner kollidieren mit einander. Dabei wird überprüft wieviel Schaden der Gegner nimmt und ob er stirbt.
--   `Objektanzahl variabel`: Die Gegner werden dynamisch während der Laufzeit basierend auf der Level / Wave Konfiguration generiert. Platzierte Turrets werden auch automatisch erstellt.
--   `Szenenhierarchie`: Die Szenenhierarchie ist wie folgt aufgebaut:
+The user manipulates the game with his mouse. Selecting and placing towers is done with the left mouse button.
+Pressing ESC will cancel the purchase of a tower before placing it.
+
+### Object interaction (Objektinteraktion)
+
+The bullets and the opponents collide with each other. This checks how much damage the opponent takes and whether he
+dies.
+
+### Variable number of objects (Objektanzahl variabel)
+
+The opponents are generated dynamically during runtime based on the level / wave configuration. Placed turrets are also
+created automatically.
+
+### Scene hierarchy (Szenenhierarchie)
+
+The scene hierarchy is structured as follows:
 
 ```
 Level
-  > HUD
-    > Money Anzeige
-    > Score Anzeige
-    > Health Anzeige
-  > Shop
-    > Automatisch generierte Turret Buttons
-  > Gridmap
-    > Cells
-    > Path
+|- HUD
+|  |- Money display
+|  |- Score display
+|  |- Health display
+|- Shop
+|  |- Automatically generated turret buttons
+|- Gridmap
+|  |- Cells
+|  |- Path
 ```
 
--   `Sound`: Folgende Aktionen werden zur Zeit mit Sound unterstützt:
-    -   Der Versuch einen Turret auf den Pfad zu setzen
-    -   Das Abbrechen des Kaufs eines Turrets mit ESC
-    -   Der Schuss eines Turrets
-    -   Der Beginn einer neuen Wave
-    -   Schaden nehmen, wenn die Gegner die Basis erreichen
-    -   Das Ende des Spiels (Gewonnen oder Verloren unterschiedlich)
-    -   Hintergrundmusik
--   `GUI`: Über das HUD kann der Nutzer aktuelle Werte zu Score, Geld und Lebenspunkte einsehen. Über den Shop kann er Turrets kaufen und platzieren.
--   `Externe Daten`: Nicht implementiert, aber möglich (Alle Daten sind anpassbar).
--   `Verhaltensklassen`: Alle wichtigen Komponenten sind als Klassen definiert.
--   `Subklassen`: Diverse Klassen extenden vorgegebene Klassen von Phaser.
--   `Maße & Positionen`: Eine Zelle ist 50 x 50 Pixel groß. Die Turrets sind 40 x 40, Gegner 20 x 20 und Bullets 10 x 10 Pixel groß.
--   `Event-System`: Es werden diverse Events über einen eigenen Event Bus ausgetauscht.
+### Sound
+
+The following actions are currently supported with sound:
+
+-   Attempting to place a Turret on the path
+-   Canceling the purchase of a turret with ESC
+-   The shot of a turret
+-   The start of a new wave
+-   Taking damage when the enemies reach the base
+-   The end of the game (Won or Lost differently)
+-   Background music
+
+### GUI
+
+Via the HUD the user can see the current values of score, money and health points. He can buy and place turrets via the
+shop in the lower third of the game.
+
+### External data (Externe Daten)
+
+Not implemented, but possible (All data is customizable).
+
+### Behaviour classes (Verhaltensklassen)
+
+All important components are defined as classes.
+
+### Sub classes (Subklassen)
+
+Various classes extend predefined classes of the Phaser game engine.
+
+### Dimensions & Positions (Maße & Positionen)
+
+A cell is 50 x 50 pixels in size. Turrets are 40 x 40, opponents are 20 x 20, and bullets are 10 x 10 pixels.
+
+### Event system (Event-System)
+
+Various events are exchanged via a dedicated event bus.
+
+## Components in detail
+
+### Controllers
+
+See [here](https://github.com/Techassi/tinytowers/tree/master/src/controller)
+
+The main controller reacts to game level events, such as winning or losing. There are two sub controllers: the `Turret`
+and `Wave` controller.
+
+The `Turret controller` is responsible for placing turrets at the provided positions and keeps track of already placed
+turrets.
+
+The `Wave controller` is responsible for managing the different waves, their steps and the enemy spawning per step. It
+does this via multiple `tickers` which tightly control the wave, step and enemy timings. It also keeps track of
+remaining enemies and enemies in range of turrets.
+
+### Store
+
+See [here](https://github.com/Techassi/tinytowers/tree/master/src/store)
+
+The store holds global data and can be accessed from multiple components. The store provides typed getters and setters,
+aswell as methods to subscribe to mutations, which allows e.g. the HUD to update its values automatically.
+
+### Event bus
+
+See [here](https://github.com/Techassi/tinytowers/tree/master/src/bus)
+
+The bus allows multiple components to exchange events and additional payloads. The gets primarily used by objects like
+turrest or enemies to indicate some events back to the controllers.
+
+### Gridmap
+
+See [here](https://github.com/Techassi/tinytowers/tree/master/src/gridmap)
+
+The gridmap is responsible for cell layout and enemy path generation.
