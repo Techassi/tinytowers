@@ -49,6 +49,17 @@ development build via the above mentioned scripts.
 
 ## Game Design
 
+TinyTowers is a simple turret / tower defense game. It follows the classical approach with multiple waves (which can
+contain multiple steps). When one or more enemies reach the "base" of the player, it takes damage. When the base health
+drops to zero or below, the player loses. The user can defend his base against the enemies by building turrets which
+shot and kill the enemies. When he survives all waves and his base has still more than zero health the player wins.
+
+Before starting the game the user has to click the "Start Game" button, which then generates the level and immediatly
+starts the first wave. The player start with 20 money, 0 score and 100 health points.
+
+For each shot enemy the player gets rewarded with some money and the score updates. The score gets calculated how early
+the enemy was killed. The earlier - the higher score.
+
 ### User interaction (Nutzerinteraktion)
 
 The user manipulates the game with his mouse. Selecting and placing towers is done with the left mouse button.
@@ -153,3 +164,10 @@ turrest or enemies to indicate some events back to the controllers.
 See [here](https://github.com/Techassi/tinytowers/tree/master/src/gridmap)
 
 The gridmap is responsible for cell layout and enemy path generation.
+
+## Asset sources
+
+All images are created by me (Simple, but enough).
+
+All sound assets are taken from [here](https://freesound.org/). You can download these for free when you have an
+account.
