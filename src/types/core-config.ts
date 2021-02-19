@@ -3,7 +3,7 @@ import { EnemyStats } from './enemy';
 import { TurretStats } from './turret';
 
 export interface CoreConfig {
-    towerConfig: TurretStats[];
+    turretConfig: TurretStats[];
     enemyConfig: EnemyStats[];
     levelConfig: LevelConfig;
 }

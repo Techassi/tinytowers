@@ -111,7 +111,7 @@ shop in the lower third of the game.
 
 ### External data (Externe Daten)
 
-Not implemented, but possible (All data is customizable).
+The config gets loaded via a URL (a config JSON file) when the game starts (All data is customizable).
 
 ### Behaviour classes (Verhaltensklassen)
 

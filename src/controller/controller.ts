@@ -54,7 +54,7 @@ export default class Controller {
         this.gameConfig = gameConfig;
         this.enemyConfig = coreConfig.enemyConfig;
         this.levelConfig = coreConfig.levelConfig;
-        this.turretStats = coreConfig.towerConfig;
+        this.turretStats = coreConfig.turretConfig;
 
         this.bus = bus;
 

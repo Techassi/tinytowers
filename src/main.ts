@@ -1,8 +1,8 @@
 import 'phaser';
 
-import { coreConfig, gameConfig } from './config';
+import { gameConfig } from './config';
+import { loadFromURL } from './config/loader';
 
-import Controller from './controller/controller';
 import Menu from './scenes/menu';
 
 export class TinyTowerGame extends Phaser.Game {
@@ -11,7 +11,9 @@ export class TinyTowerGame extends Phaser.Game {
     }
 }
 
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
+    const coreConfig = await loadFromURL('core-config.json');
+
     const game = new TinyTowerGame(gameConfig);
     const menu = new Menu();
 

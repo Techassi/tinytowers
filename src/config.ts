@@ -1,12 +1,5 @@
 import 'phaser';
 
-import { TurretStats } from '@/types/turret';
-import { LevelConfig } from '@/types/level';
-import { EnemyStats } from '@/types/enemy';
-import { CoreConfig } from '@/types/core-config';
-
-import Menu from '@/scenes/menu';
-
 export const gameConfig: Phaser.Types.Core.GameConfig = {
     title: 'TinyTowers',
     version: '0.0.1',
@@ -14,7 +7,6 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     height: 1000,
     backgroundColor: '#000000',
     type: Phaser.AUTO,
-    scene: [Menu],
     physics: {
         default: 'arcade',
         arcade: {
@@ -25,150 +17,4 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
         },
     },
     input: true,
-};
-
-export const towerConfig: TurretStats[] = new Array<TurretStats>(
-    {
-        name: 'turret1',
-        costs: 10,
-        damage: 10,
-        firerate: 1,
-        firerange: 200,
-        shortname: 'T1',
-        shotsPerValve: 1,
-    },
-    {
-        name: 'turret2',
-        costs: 15,
-        damage: 10,
-        firerate: 2,
-        firerange: 300,
-        shortname: 'T2',
-        shotsPerValve: 1,
-    },
-    {
-        name: 'T3',
-        costs: 25,
-        damage: 10,
-        firerate: 2,
-        firerange: 350,
-        shortname: 'T3',
-        shotsPerValve: 2,
-    }
-);
-
-export const levelConfig: LevelConfig = {
-    name: 'Test',
-    path: [
-        {
-            x: 2,
-            y: 0,
-        },
-        {
-            x: 2,
-            y: 2,
-        },
-        {
-            x: 5,
-            y: 2,
-        },
-        {
-            x: 5,
-            y: 7,
-        },
-        {
-            x: 7,
-            y: 7,
-        },
-        {
-            x: 7,
-            y: 2,
-        },
-        {
-            x: 11,
-            y: 2,
-        },
-        {
-            x: 11,
-            y: 6,
-        },
-        {
-            x: 9,
-            y: 6,
-        },
-        {
-            x: 9,
-            y: 9,
-        },
-        {
-            x: 14,
-            y: 9,
-        },
-        {
-            x: 14,
-            y: 14,
-        },
-        {
-            x: 12,
-            y: 14,
-        },
-        {
-            x: 12,
-            y: 12,
-        },
-        {
-            x: 0,
-            y: 12,
-        },
-    ],
-    waves: [
-        {
-            name: 'TestWave1',
-            steps: [
-                { duration: 5, enemyAmount: 10, enemyType: 'enemy1' },
-                { duration: 5, enemyAmount: 5, enemyType: 'enemy2' },
-                { duration: 5, enemyAmount: 15, enemyType: 'enemy1' },
-            ],
-        },
-        {
-            name: 'TestWave2',
-            steps: [
-                { duration: 5, enemyAmount: 10, enemyType: 'enemy2' },
-                { duration: 5, enemyAmount: 5, enemyType: 'enemy1' },
-                { duration: 5, enemyAmount: 15, enemyType: 'enemy2' },
-            ],
-        },
-        {
-            name: 'TestWave3',
-            steps: [
-                { duration: 5, enemyAmount: 15, enemyType: 'enemy1' },
-                { duration: 10, enemyAmount: 20, enemyType: 'enemy2' },
-            ],
-        },
-    ],
-    width: gameConfig.width as number,
-    height: 800,
-};
-
-export const enemyConfig: EnemyStats[] = new Array<EnemyStats>(
-    {
-        health: 20,
-        reward: 2,
-        damage: 5,
-        speed: 1 / 30000,
-        name: 'enemy1',
-    },
-    {
-        health: 30,
-        reward: 5,
-        damage: 8,
-        speed: 1 / 30000,
-        name: 'enemy2',
-    }
-);
-
-export const coreConfig: CoreConfig = {
-    towerConfig: towerConfig,
-    enemyConfig: enemyConfig,
-    levelConfig: levelConfig,
 };
