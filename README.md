@@ -2,11 +2,15 @@
 
 Final submission for PRIMA WS20
 
-| Bezeichnung    | Inhalt                |
-| -------------- | --------------------- |
-| Titel          | TinyTowers            |
-| Name           | Sascha Lautenschläger |
-| Matrikelnummer | 257287                |
+```
+Titel:          TinyTowers
+Name:           Sascha Lautenschläger
+Matrikelnummer: 257287
+```
+
+Der Quellcode befindet sich [hier](https://github.com/Techassi/tinytowers/tree/master/src)
+
+Informationen zum Game Design befinden sich in der README weiter [unten](https://github.com/Techassi/tinytowers#game-design)
 
 ## Tools
 
