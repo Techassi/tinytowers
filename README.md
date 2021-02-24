@@ -2,12 +2,6 @@
 
 Final submission for PRIMA WS20
 
-```
-Titel:          TinyTowers
-Name:           Sascha Lautenschläger
-Matrikelnummer: 257287
-```
-
 Eine spielbare Version befindet sich [hier](https://techassi.github.io/tinytowers/)
 
 Der Quellcode befindet sich [hier](https://github.com/Techassi/tinytowers/tree/master/src)
@@ -60,74 +54,22 @@ starts the first wave. The player start with 20 money, 0 score and 100 health po
 For each shot enemy the player gets rewarded with some money and the score updates. The score gets calculated how early
 the enemy was killed. The earlier - the higher score.
 
-### User interaction (Nutzerinteraktion)
-
-The user manipulates the game with his mouse. Selecting and placing towers is done with the left mouse button.
-Pressing ESC will cancel the purchase of a tower before placing it.
-
-### Object interaction (Objektinteraktion)
-
-The bullets and the opponents collide with each other. This checks how much damage the opponent takes and whether he
-dies.
-
-### Variable number of objects (Objektanzahl variabel)
-
-The opponents are generated dynamically during runtime based on the level / wave configuration. Placed turrets are also
-created automatically.
-
-### Scene hierarchy (Szenenhierarchie)
-
-The scene hierarchy is structured as follows:
-
-```
-Level
-|- HUD
-|  |- Money display
-|  |- Score display
-|  |- Health display
-|- Shop
-|  |- Automatically generated turret buttons
-|- Gridmap
-|  |- Cells
-|  |- Path
-```
-
-### Sound
-
-The following actions are currently supported with sound:
-
--   Attempting to place a Turret on the path
--   Canceling the purchase of a turret with ESC
--   The shot of a turret
--   The start of a new wave
--   Taking damage when the enemies reach the base
--   The end of the game (Won or Lost differently)
--   Background music
-
-### GUI
-
-Via the HUD the user can see the current values of score, money and health points. He can buy and place turrets via the
-shop in the lower third of the game.
-
-### External data (Externe Daten)
-
-The config gets loaded via a URL (a config JSON file) when the game starts (All data is customizable).
-
-### Behaviour classes (Verhaltensklassen)
-
-All important components are defined as classes.
-
-### Sub classes (Subklassen)
-
-Various classes extend predefined classes of the Phaser game engine.
-
-### Dimensions & Positions (Maße & Positionen)
-
-A cell is 50 x 50 pixels in size. Turrets are 40 x 40, opponents are 20 x 20, and bullets are 10 x 10 pixels.
-
-### Event system (Event-System)
-
-Various events are exchanged via a dedicated event bus.
+|  Nr | Bezeichnung           | Inhalt                                                                                                                                                                                                                                                                                                                                                         |
+| --: | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|     | Titel                 | TinyTowers                                                                                                                                                                                                                                                                                                                                                     |
+|     | Name                  | Sascha Lautenschläger                                                                                                                                                                                                                                                                                                                                          |
+|     | Matrikelnummer        | 257287                                                                                                                                                                                                                                                                                                                                                         |
+|   1 | Nutzerinteraktion     | The user manipulates the game with his mouse. Selecting and placing towers is done with the left mouse button. Pressing ESC will cancel the purchase of a tower before placing it.                                                                                                                                                                             |
+|   2 | Objektinteraktion     | The bullets and the opponents collide with each other. This checks how much damage the opponent takes and whether he dies.                                                                                                                                                                                                                                     |
+|   3 | Objektanzahl variabel | The opponents are generated dynamically during runtime based on the level / wave configuration. Placed turrets are also created automatically.                                                                                                                                                                                                                 |
+|   4 | Szenenhierarchie      | The scene hierarchy is structured as follows: <br/> Level<br/> - HUD <br/> -- Money display <br/> -- Score display <br/> -- Health display <br/> - Shop <br/> -- Automatically generated turret buttons <br/> - Gridmap <br/> -- Cells <br/> -- Path                                                                                                           |
+|   5 | Sound                 | The following actions are currently supported with sound: <br/> - Attempting to place a Turret on the path <br/> - Canceling the purchase of a turret with ESC <br/> - The shot of a turret <br/> - The start of a new wave <br/> - Taking damage when the enemies reach the base <br/> - The end of the game (Won or Lost different) <br/> - Background music |
+|   6 | GUI                   | Via the HUD the user can see the current values of score, money and health points. He can buy and place turrets via the shop in the lower third of the game.                                                                                                                                                                                                   |
+|   7 | Externe Daten         | The config gets loaded via a URL (a config JSON file) when the game starts (All data is customizable).                                                                                                                                                                                                                                                         |
+|   8 | Verhaltensklassen     | All important components are defined as classes.                                                                                                                                                                                                                                                                                                               |
+|   9 | Subklassen            | Various classes extend predefined classes of the Phaser game engine.                                                                                                                                                                                                                                                                                           |
+|  10 | Maße & Positionen     | A cell is 50 x 50 pixels in size. Turrets are 40 x 40, opponents are 20 x 20, and bullets are 10 x 10 pixels.                                                                                                                                                                                                                                                  |
+|  11 | Event-System          | Various events are exchanged via a dedicated event bus.                                                                                                                                                                                                                                                                                                        |
 
 ## Components in detail
 
@@ -171,3 +113,7 @@ All images are created by me (Simple, but enough).
 
 All sound assets are taken from [here](https://freesound.org/). You can download these for free when you have an
 account.
+
+```
+
+```
