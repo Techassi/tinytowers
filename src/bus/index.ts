@@ -1,5 +1,3 @@
-import 'phaser';
-
 export class Bus {
     private callbacks!: CallbackMap;
 
