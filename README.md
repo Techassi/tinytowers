@@ -98,8 +98,8 @@ aswell as methods to subscribe to mutations, which allows e.g. the HUD to update
 
 See [here](https://github.com/Techassi/tinytowers/tree/master/src/bus)
 
-The bus allows multiple components to exchange events and additional payloads. The gets primarily used by objects like
-turrest or enemies to indicate some events back to the controllers.
+The bus allows multiple components to exchange events and additional payloads. The bus gets primarily used by objects
+like turrets or enemies to indicate some events back to the controllers.
 
 ### Gridmap
 
@@ -113,7 +113,3 @@ All images are created by me (Simple, but enough).
 
 All sound assets are taken from [here](https://freesound.org/). You can download these for free when you have an
 account.
-
-```
-
-```
